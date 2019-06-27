@@ -13,13 +13,14 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $where = array();
         $or_where = array();
 
         if (isset($request->search) && !empty($request->search)){
             $where[0] = array('status','=',1);
+
             $or_where[0] = array('membership_id','like',$request->search);
             $or_where[1] = array('firstname','like',$request->search);
             $or_where[2] = array('lastname','like',$request->search);
