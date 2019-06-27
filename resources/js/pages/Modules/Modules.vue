@@ -9,9 +9,13 @@
     </h1>
 
     <b-row>
-      <b-col lg="6">
+      <b-col lg="12">
         <Widget>
-          {{message}}
+
+        <b-form id="formPersonal" @submit.stop.prevent="submitPersonal()">
+        
+        </b-form>
+        
         </Widget>
       </b-col>
     </b-row>

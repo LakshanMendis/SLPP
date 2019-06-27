@@ -9,9 +9,18 @@
     </h1>
 
     <b-row>
-      <b-col lg="6">
+      <b-col lg="12">
         <Widget>
-          {{message}}
+          <b-col md="6">
+                        <b-form-group id="input-group-1" label="*Membership ID:" label-for="input-1">
+                          <b-form-input
+                            id="input-1"
+                            required
+                            value=""
+                            placeholder="Enter Membership ID"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
         </Widget>
       </b-col>
     </b-row>
