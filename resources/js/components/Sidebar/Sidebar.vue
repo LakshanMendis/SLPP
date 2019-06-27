@@ -18,6 +18,22 @@
       />
       <NavLink
               :activeItem="activeItem"
+              header="Administrator"
+              link="/app/admin"
+              iconName="flaticon-share"
+              index="admin"
+              :childrenLinks="[
+          { header: 'Users', link: '/app/admin/users' },
+          { header: 'Modules', link: '/app/admin/modules' },
+          { header: 'Permissions', link: '/app/admin/permissions' },
+          { header: 'Companies', link: '/app/admin/companies' },
+          { header: 'Locations', link: '/app/admin/locations' },
+          { header: 'Departments', link: '/app/admin/departments' },
+          { header: 'Designations', link: '/app/admin/designations' },
+        ]"
+      />
+      <NavLink
+              :activeItem="activeItem"
               header="Member"
               link="/app/member"
               iconName="flaticon-user"
@@ -42,7 +58,7 @@
           { header: 'Posting', link: '/app/templating/posting' },
         ]"
       />
-      <!-- <NavLink
+      <NavLink
               :activeItem="activeItem"
               header="Guides"
               link="/app/guide"
@@ -57,7 +73,7 @@
           { header: 'Icons', link: '/app/guide/icons' },
           { header: 'Maps', link: '/app/guide/maps' },
         ]"
-      /> -->
+      />
     </ul>
   </nav>
   </b-collapse>

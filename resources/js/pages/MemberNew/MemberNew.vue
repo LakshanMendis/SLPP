@@ -520,6 +520,7 @@
   </div>
 </template>
 
+
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
 import { validationMixin } from 'vuelidate'

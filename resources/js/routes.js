@@ -15,6 +15,15 @@ import Login from 'RESO/js/pages/Login/Login';
 import ErrorPage from 'RESO/js/pages/Error/Error';
 import AnotherPage from 'RESO/js/pages/AnotherPage/AnotherPage';
 
+/* Admin Pages */
+import Users from 'RESO/js/pages/Users/Users';
+import Modules from 'RESO/js/pages/Modules/Modules';
+import Permissions from 'RESO/js/pages/Permissions/Permissions';
+import Companies from 'RESO/js/pages/Companies/Companies';
+import Locations from 'RESO/js/pages/Locations/Locations';
+import Departments from 'RESO/js/pages/Departments/Departments';
+import Designations from 'RESO/js/pages/Designations/Designations';
+
 /* Member Pages */
 import MemberView from 'RESO/js/pages/MemberView/MemberView';
 import MemberNew from 'RESO/js/pages/MemberNew/MemberNew';
@@ -124,6 +133,46 @@ const routes = [
                 path: 'guide/charts',
                 name: 'Charts',
                 component: Charts,
+            },
+            {
+                path: 'admin/users',
+                name: 'Users',
+                component: Users,
+            },
+            {
+                path: 'admin/modules',
+                name: 'Modules',
+                component: Modules,
+            },
+
+            {
+                path: 'admin/permissions',
+                name: 'Permissions',
+                component: Permissions,
+            },
+
+            {
+                path: 'admin/companies',
+                name: 'Companies',
+                component: Companies,
+            },
+
+            {
+                path: 'admin/locations',
+                name: 'Locations',
+                component: Locations,
+            },
+
+            {
+                path: 'admin/departments',
+                name: 'Departments',
+                component: Departments,
+            },
+
+            {
+                path: 'admin/designations',
+                name: 'Designations',
+                component: Designations,
             },
         ],
     },
