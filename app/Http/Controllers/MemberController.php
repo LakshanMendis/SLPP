@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\member;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class MemberController extends Controller
 {
@@ -14,7 +15,28 @@ class MemberController extends Controller
      */
     public function index()
     {
-        //
+        $where = array();
+        $or_where = array();
+
+        if (isset($request->search) && !empty($request->search)){
+            $where[0] = array('status','=',1);
+            $or_where[0] = array('membership_id','like',$request->search);
+            $or_where[1] = array('firstname','like',$request->search);
+            $or_where[2] = array('lastname','like',$request->search);
+            $or_where[3] = array('callingname','like',$request->search);
+        }else{
+            $where[0] = array('status','=',1);
+        }
+
+        $all_active_members = member::where($where)
+        ->orWhere($or_where)
+        ->orderBy('firstname', 'asc')
+        ->orderBy('lastname', 'asc')
+        ->orderBy('callingname', 'asc')
+        ->get()
+        ->jsonSerialize();
+
+        return response($all_active_members, Response::HTTP_OK);
     }
 
     /**
@@ -22,9 +44,24 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $member = new member;
+
+        $member->membership_id = $request->text_membership_id;
+        $member->title_id = $request->select_title;
+        $member->firstname = $request->text_firstname;
+        $member->lastname = $request->text_lastname;
+        $member->callingname = $request->text_callingname;
+        $member->nic = $request->text_nic;
+        $member->nationality_id = $request->select_nationality;
+        $member->religion_id = $request->select_religion;
+        $member->remarks = $request->text_remarks;
+        $member->status = $request->select_status;
+
+        $member->save();
+
+        return response($member->jsonSerialize(), Response::HTTP_CREATED);
     }
 
     /**

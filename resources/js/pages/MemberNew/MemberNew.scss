@@ -1,24 +1,28 @@
 @import '../../styles/app';
 
 .help-alert {
-    background: $text-transparent;
-    border: none;
-    font-size: $font-size-sm;
-    line-height: 19px;
-    margin-bottom: 0;
-    margin-top: 10px;
-    margin-left: 5px;
-    padding: 3px 9px;
-    text-shadow: none;
-    border-radius: 10px;
-    color: $text-color;
-    height: 23px;
-  
-    :global(.close) {
-      margin-left: 1rem;
-    }
-  
-    @media (max-width: breakpoint-max('lg')) {
-      display: none;
-    }
+  background: $text-transparent;
+  border: none;
+  font-size: $font-size-sm;
+  line-height: 19px;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 5px;
+  padding: 3px 9px;
+  text-shadow: none;
+  border-radius: 10px;
+  color: $text-color;
+  height: 23px;
+
+  :global(.close) {
+    margin-left: 1rem;
   }
+
+  @media (max-width: breakpoint-max('lg')) {
+    display: none;
+  }
+}
+
+.search_member{
+  width: 220px;
+}

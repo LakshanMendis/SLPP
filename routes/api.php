@@ -56,3 +56,7 @@ Route::resource('/gnDivs', 'GramasevaController', [
 Route::resource('/languages', 'LanguageController', [
     'except' => ['edit', 'show', 'store']
 ]);
+
+Route::resource('/members', 'MemberController', [
+    'except' => ['edit', 'store']
+]);

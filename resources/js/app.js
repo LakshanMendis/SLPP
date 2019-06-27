@@ -14,6 +14,8 @@ import axios from 'axios';
 import VCalendar from 'v-calendar';
 import CKEditor from '@ckeditor/ckeditor5-vue';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import Vuelidate from 'vuelidate';
+import VueSweetalert2 from 'vue-sweetalert2';
 
 // Route information for Vue Router
 import Routes from 'RESO/js/routes.js';
@@ -27,6 +29,8 @@ import App from 'RESO/js/views/App';
 //Vue.use(Vuetify, VueAxios, axios);
 Vue.use( BootstrapVue, VueAxios, axios );
 Vue.use( CKEditor );
+Vue.use( Vuelidate );
+Vue.use( VueSweetalert2 );
 
 Vue.use(VueGoogleMaps, {
     load: {

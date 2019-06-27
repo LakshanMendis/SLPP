@@ -13,7 +13,7 @@
         <Widget>
           <b-tabs content-class="mt-3">
             <b-tab title="Personal" active>
-              <b-form id="formPersonal" @submit.stop.prevent="submitPersonal()">
+              <b-form name="formPersonal" id="formPersonal" @submit.stop.prevent="submitPersonal()" novalidate>
                 <b-row>
                   <b-col md="3 p-4 bg-dark">
                     <b-row>
@@ -34,18 +34,28 @@
                   <b-col md="9">
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="input-group-1" label="*Membership ID:" label-for="input-1">
+                        <b-form-group id="group_membership_id" label="*Membership ID:" label-for="text_membership_id" :class="{ 'form-group--error': $v.form_personal.text_membership_id.$error }">
                           <b-form-input
-                            id="input-1"
-                            required
-                            value=""
+                            id="text_membership_id"
+                            name="text_membership_id"
                             placeholder="Enter Membership ID"
+                            aria-describedby="feedback_membership_id"
+                            v-model="$v.form_personal.text_membership_id.$model"
+                            :state="$v.form_personal.text_membership_id.$dirty ? !$v.form_personal.text_membership_id.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback id="feedback_membership_id">
+                            This is a required field.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group id="input-group-2" label="Title:" label-for="input-2">
-                          <b-form-select class="mb-3" id="input-2">
+                        <b-form-group id="group_title" label="Title:" label-for="select_title">
+                          <b-form-select 
+                            class="mb-3"
+                            id="select_title"
+                            name="select_title"
+                            v-model="form_personal.select_title"
+                          >
                             <option value="" selected disabled>Select Title</option>
                             <option
                               v-for="data in titles"
@@ -59,20 +69,27 @@
 
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="input-group-3" label="*First Name/Initials:" label-for="input-3">
+                        <b-form-group id="group_firstname" label="*First Name/Initials:" label-for="text_firstname" :class="{ 'form-group--error': $v.form_personal.text_firstname.$error }">
                           <b-form-input
-                            id="input-3"
-                            required
+                            id="text_firstname"
+                            name="text_firstname"
                             placeholder="First Name/Initials"
+                            aria-describedby="feedback_firstname"
+                            v-model="$v.form_personal.text_firstname.$model"
+                            :state="$v.form_personal.text_firstname.$dirty ? !$v.form_personal.text_firstname.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback id="feedback_firstname">
+                            This is a required field.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group id="input-group-4" label="Last Name:" label-for="input-4">
+                        <b-form-group id="group_lastname" label="Last Name:" label-for="text_lastname">
                           <b-form-input
-                            id="input-4"
-                            required
+                            id="text_lastname"
+                            name="text_lastname"
                             placeholder="Last Name"
+                            v-model="form_personal.text_lastname"
                           ></b-form-input>
                         </b-form-group>
                       </b-col>
@@ -80,29 +97,46 @@
 
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="input-group-5" label="*Calling Name:" label-for="input-5">
+                        <b-form-group id="group_callingname" label="*Calling Name:" label-for="text_callingname" :class="{ 'form-group--error': $v.form_personal.text_callingname.$error }">
                           <b-form-input
-                            id="input-5"
-                            required
+                            id="text_callingname"
+                            name="text_callingname"
                             placeholder="Calling Name"
+                            aria-describedby="feedback_callingname"
+                            v-model="$v.form_personal.text_callingname.$model"
+                            :state="$v.form_personal.text_callingname.$dirty ? !$v.form_personal.text_callingname.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback id="feedback_callingname">
+                            This is a required field.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
-                        <b-form-group id="input-group-6" label="*NIC:" label-for="input-6">
+                        <b-form-group id="group_nic" label="*NIC:" label-for="text_nic" :class="{ 'form-group--error': $v.form_personal.text_nic.$error }">
                           <b-form-input
-                            id="input-6"
-                            required
+                            id="text_nic"
+                            name="text_nic"
                             placeholder="NIC"
+                            aria-describedby="feedback_nic"
+                            v-model="$v.form_personal.text_nic.$model"
+                            :state="$v.form_personal.text_nic.$dirty ? !$v.form_personal.text_nic.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback id="feedback_nic">
+                            This is a required field.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
 
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="input-group-7" label="Nationality:" label-for="input-7">
-                          <b-form-select class="mb-3" id="input-7">
+                        <b-form-group id="group_nationality" label="Nationality:" label-for="select_nationality">
+                          <b-form-select 
+                            class="mb-3" 
+                            id="select_nationality"
+                            name="select_nationality"
+                            v-model="form_personal.select_nationality"
+                          >
                             <option value="1" selected disabled>Select Nationality</option>
                             <option
                               v-for="data in nationalities"
@@ -114,8 +148,13 @@
                       </b-col>
 
                       <b-col md="6">
-                        <b-form-group id="input-group-8" label="Religion:" label-for="input-8">
-                          <b-form-select class="mb-3" id="input-8">
+                        <b-form-group id="group_religion" label="Religion:" label-for="select_religion">
+                          <b-form-select 
+                            class="mb-3" 
+                            id="select_religion"
+                            name="select_religion"
+                            v-model="form_personal.select_religion"
+                          >
                             <option value="1" selected disabled>Select Religion</option>
                             <option
                               v-for="data in religions"
@@ -174,19 +213,26 @@
 
                 <b-row>
                   <b-col lg="8">
-                    <b-form-group id="input-group-12" label="Remarks:" label-for="input-12">
+                    <b-form-group id="group_remarks" label="Remarks:" label-for="text_remarks">
                       <b-form-textarea
-                        id="input-12"
+                        id="text_remarks"
+                        name="text_remarks"
                         placeholder="Remarks..."
                         rows="3"
                         max-rows="6"
+                        v-model="form_personal.text_remarks"
                       ></b-form-textarea>
                     </b-form-group>
                   </b-col>
 
                   <b-col lg="4">
-                    <b-form-group id="input-group-13" label="*Status:" label-for="input-13">
-                      <b-form-select class="mb-3" id="input-13">
+                    <b-form-group id="group_status" label="Status:" label-for="select_status">
+                      <b-form-select 
+                        class="mb-3" 
+                        id="select_status"
+                        name="select_status"
+                        v-model="form_personal.select_status"
+                      >
                         <option value="1">Active</option>
                         <option value="0">Inactive</option>
                       </b-form-select>
@@ -503,8 +549,10 @@
             </b-tab>
 
             <template slot="tabs">
-              <div md="3" class="pt-2 float-right">
-                <b-form-input placeholder="Search Member"></b-form-input>
+              <div md="3" class="pl-3 float-right">
+                <multiselect v-model="search.select_member" class="search_member" id="search_member" placeholder="Search Member" open-direction="bottom" :options="search.load_members" :multiple="true" :searchable="true" :loading="search.loading" :internal-search="false" :clear-on-select="false" :close-on-select="true" :options-limit="300" :limit="3" :limit-text="limitText" :max-height="300" :show-no-results="true" :hide-selected="false" @search-change="searchMember">
+                  <span slot="noResult">No matching members found</span>
+                </multiselect>
               </div>
             </template>
 
@@ -520,21 +568,28 @@
   </div>
 </template>
 
+<style src="./../../../../node_modules/vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
-import { validationMixin } from 'vuelidate'
-import { required, minLength } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators';
+import Multiselect from 'vue-multiselect';
 
 export default {
-  name: 'AnotherPage',
-  components: { Widget },
-  mixins: [validationMixin],
+  name: 'MemberNew',
+  components: { Widget, Multiselect },
   data() {
     return {
       tabs:{
         showHelpAlert: true,
         childTabsDisabled: true
       },
+      search: {
+        select_member: '',
+        load_members: [],
+        loading: false
+      },
+      global_member_id: 0,
       titles: [],
       nationalities: [],
       religions: [],
@@ -546,12 +601,27 @@ export default {
       gnDivs: [],
       languages: [],
       form_personal: {
-
+        id: this.global_member_id,
+        text_membership_id: '',
+        select_title: '',
+        text_firstname: '',
+        text_lastname: '',
+        text_callingname: '',
+        text_nic: '',
+        select_nationality: 1,
+        select_religion: 1,
+        text_remarks: '',
+        select_status: 1
       }
     }
   },
   validations: {
-
+    form_personal: {
+      text_membership_id: { required },
+      text_firstname: { required },
+      text_callingname: { required },
+      text_nic: { required },
+    },
   },
   methods: {
     all_titles() {
@@ -631,8 +701,45 @@ export default {
       }
     },
     submitPersonal(){
-      console.log("Form submit fired!!");
-      this.tabs.childTabsDisabled = false;
+      this.$v.form_personal.$touch();
+
+      if (this.$v.form_personal.$anyError) {
+        console.error("Form submit validate errors on personal form");
+        return
+      }
+
+      console.log("personal form ready to submit, no validation errors!!");
+
+      if (this.global_member_id > 0){
+        window.axios.put('/api/members/$(this.globalmember_id)', { params: this.form_personal }).then(({ data }) => {
+          if (data.id) {
+            this.global_member_id = data.id;
+            this.$swal('Success', 'Member updated successfully!!', 'success');
+            this.tabs.childTabsDisabled = false;
+          }
+        });
+      }else{
+        window.axios.get('/api/members/create', { params: this.form_personal }).then(({ data }) => {
+          if (data.id) {
+            this.global_member_id = data.id;
+            this.$swal('Success', 'Member created successfully!!', 'success');
+            this.tabs.childTabsDisabled = false;
+          }
+        });
+      }
+    },
+    limitText (count) {
+      return `and ${count} other members`
+    },
+    searchMember (query) {
+      this.search.loading = true;
+
+      const para = { 'search': query };
+
+      window.axios.get('/api/members', { params: para }).then(({ data }) => {
+        this.search.loading = false;
+        this.search.load_members = data;
+      });
     }
   },
   created() {
