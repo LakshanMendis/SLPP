@@ -13,7 +13,7 @@
         <Widget>
           <b-tabs content-class="mt-3">
             <b-tab title="Personal" active>
-              <b-form name="formPersonal" id="formPersonal" @submit.stop.prevent="submitPersonal()" novalidate>
+              <b-form name="formPersonal" id="formPersonal" @submit.stop.prevent="submitPersonal()" @reset.stop.prevent="resetAll()" novalidate>
                 <b-row>
                   <b-col md="3 p-4 bg-dark">
                     <b-row>
@@ -169,50 +169,7 @@
                 </b-row>
 
                 <b-row>
-                  <b-col md="12" class="pt-3 pb-2">
-                    <fieldset>
-                      <legend><h5><strong>Categories</strong></h5></legend>
-                      <b-row>
-                        <b-col md="4">
-                          <b-form-group id="input-group-9" label="Member Type:" label-for="input-9">
-                            <b-form-select class="mb-3" id="input-9">
-                              <option value="1">Parliament</option>
-                              <option value="2">Provincial</option>
-                              <option value="3">Local Authority</option>
-                              <option value="4">SLPP Union</option>
-                              <option value="5">SLPP Party</option>
-                              <option value="6">SLPP Intelectual</option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-
-                        <b-col md="4">
-                          <b-form-group id="input-group-10" label="Profession:" label-for="input-10">
-                            <b-form-select class="mb-3" id="input-10">
-                              <option value="1">Administration</option>
-                              <option value="2">Driver</option>
-                              <option value="3">Engineer</option>
-                              <option value="4">Doctor</option>
-                              <option value="5">Tour Guide</option>
-                              <option value="6">Military Officer</option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-
-                        <b-col md="4">
-                          <b-form-group id="input-group-11" label="Sub Category:" label-for="input-11">
-                            <b-form-select class="mb-3" id="input-11">
-                              <option value="1">Sub category 1</option>
-                            </b-form-select>
-                          </b-form-group>
-                        </b-col>
-                      </b-row>
-                    </fieldset>
-                  </b-col>
-                </b-row>
-
-                <b-row>
-                  <b-col lg="8">
+                  <b-col lg="8" class="pt-4">
                     <b-form-group id="group_remarks" label="Remarks:" label-for="text_remarks">
                       <b-form-textarea
                         id="text_remarks"
@@ -225,7 +182,7 @@
                     </b-form-group>
                   </b-col>
 
-                  <b-col lg="4">
+                  <b-col lg="4" class="pt-4">
                     <b-form-group id="group_status" label="Status:" label-for="select_status">
                       <b-form-select 
                         class="mb-3" 
@@ -469,6 +426,48 @@
               </div>
             </b-tab>
 
+            <b-tab title="Categories" :disabled="tabs.childTabsDisabled">
+              <b-row>
+                <b-col md="12" class="pt-3 pb-2">
+                  <b-row>
+                    <b-col md="4">
+                      <b-form-group id="input-group-9" label="Member Type:" label-for="input-9">
+                        <b-form-select class="mb-3" id="input-9">
+                          <option value="1">Parliament</option>
+                          <option value="2">Provincial</option>
+                          <option value="3">Local Authority</option>
+                          <option value="4">SLPP Union</option>
+                          <option value="5">SLPP Party</option>
+                          <option value="6">SLPP Intelectual</option>
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="4">
+                      <b-form-group id="input-group-10" label="Profession:" label-for="input-10">
+                        <b-form-select class="mb-3" id="input-10">
+                          <option value="1">Administration</option>
+                          <option value="2">Driver</option>
+                          <option value="3">Engineer</option>
+                          <option value="4">Doctor</option>
+                          <option value="5">Tour Guide</option>
+                          <option value="6">Military Officer</option>
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="4">
+                      <b-form-group id="input-group-11" label="Sub Category:" label-for="input-11">
+                        <b-form-select class="mb-3" id="input-11">
+                          <option value="1">Sub category 1</option>
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+            </b-tab>
+
             <b-tab title="Language" :disabled="tabs.childTabsDisabled">
               <b-row>
                 <b-col md="12">
@@ -550,8 +549,12 @@
 
             <template slot="tabs">
               <div md="3" class="pl-3 float-right">
-                <multiselect v-model="search.select_member" class="search_member" id="search_member" placeholder="Search Member" open-direction="bottom" :options="search.load_members" :multiple="true" :searchable="true" :loading="search.loading" :internal-search="false" :clear-on-select="false" :close-on-select="true" :options-limit="300" :limit="3" :limit-text="limitText" :max-height="300" :show-no-results="true" :hide-selected="false" @search-change="searchMember">
+                <multiselect v-model="search.select_member" class="search_member" id="search_member" placeholder="Search Member" open-direction="bottom" :options="search.load_members" :multiple="false" :searchable="true" :loading="search.loading" :internal-search="false" :clear-on-select="false" :close-on-select="true" :options-limit="300" :limit="3" :limit-text="limitText" :max-height="300" :show-no-results="true" :hide-selected="false" @search-change="searchMember" @select="selectedMember">
                   <span slot="noResult">No matching members found</span>
+                  <template slot="singleLabel" slot-scope="props"><span class="option__desc"><span class="option__title">[{{ props.option.membership_id }}] {{ props.option.firstname }} {{ props.option.lastname }}</span></span></template>
+                  <template slot="option" slot-scope="props">
+                    <div class="option__desc"><span class="option__title">[{{ props.option.membership_id }}] {{ props.option.firstname }} {{ props.option.lastname }}</span></div>
+                  </template>
                 </multiselect>
               </div>
             </template>
@@ -700,6 +703,24 @@ export default {
         alert ('Please fill basic/personal details first or search and select existing member to edit!!');
       }
     },
+    resetAll(){
+      this.search.select_member = "";
+      this.global_member_id = 0;
+      this.tabs.childTabsDisabled = true;
+
+      this.$v.$reset();
+
+      this.form_personal.text_membership_id = '';
+      this.form_personal.select_title = '';
+      this.form_personal.text_firstname = '';
+      this.form_personal.text_lastname = '';
+      this.form_personal.text_callingname = '';
+      this.form_personal.text_nic = '';
+      this.form_personal.select_nationality = 1;
+      this.form_personal.select_religion = 1;
+      this.form_personal.text_remarks = '';
+      this.form_personal.select_status = 1;
+    },
     submitPersonal(){
       this.$v.form_personal.$touch();
 
@@ -740,6 +761,22 @@ export default {
         this.search.loading = false;
         this.search.load_members = data;
       });
+    },
+    selectedMember (selectedOption){
+      this.search.select_member = selectedOption;
+      this.global_member_id = this.search.select_member.id;
+      this.tabs.childTabsDisabled = false;
+
+      this.form_personal.text_membership_id = this.search.select_member.membership_id;
+      this.form_personal.select_title = this.search.select_member.title_id;
+      this.form_personal.text_firstname = this.search.select_member.firstname;
+      this.form_personal.text_lastname = this.search.select_member.lastname;
+      this.form_personal.text_callingname = this.search.select_member.callingname;
+      this.form_personal.text_nic = this.search.select_member.nic;
+      this.form_personal.select_nationality = this.search.select_member.nationality_id;
+      this.form_personal.select_religion = this.search.select_member.religion_id;
+      this.form_personal.text_remarks = this.search.select_member.remarks;
+      this.form_personal.select_status = this.search.select_member.status;
     }
   },
   created() {
