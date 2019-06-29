@@ -209,99 +209,101 @@
             </b-tab>
 
             <b-tab title="Electoral" :disabled="tabs.childTabsDisabled">
-              <b-row>
-                <b-col md="12">
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-14" label="Province:" label-for="input-14">
-                        <b-form-select class="mb-3" id="input-14" @change="all_districts($event);all_electorates($event);">
-                          <option value="1" selected disabled>Select Province</option>
-                          <option
-                            v-for="data in provinces"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+              <b-form name="formElectoral" id="formElectoral" @submit.stop.prevent="submitElectoral()" @reset.stop.prevent="resetAll()" novalidate>
+                <b-row>
+                  <b-col md="12">
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_province" label="Province:" label-for="select_province">
+                          <b-form-select class="mb-3" id="select_province" @change="all_districts($event);all_electorates($event);" v-model="form_electoral.select_province">
+                            <option value="1" selected disabled>Select Province</option>
+                            <option
+                              v-for="data in provinces"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-15" label="District:" label-for="input-15">
-                        <b-form-select class="mb-3" id="input-14" @change="all_local_auths($event);">
-                          <option value="1" selected disabled>Select District</option>
-                          <option
-                            v-for="data in districts"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_district" label="District:" label-for="select_district">
+                          <b-form-select class="mb-3" id="select_district" @change="all_local_auths($event);" v-model="form_electoral.select_district">
+                            <option value="1" selected disabled>Select District</option>
+                            <option
+                              v-for="data in districts"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-16" label="Electorate:" label-for="input-16">
-                        <b-form-select class="mb-3" id="input-16">
-                          <option value="1" selected disabled>Select Electorate</option>
-                          <option
-                            v-for="data in electorates"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_electorate" label="Electorate:" label-for="select_electorate">
+                          <b-form-select class="mb-3" id="select_electorate" v-model="form_electoral.select_electorate">
+                            <option value="1" selected disabled>Select Electorate</option>
+                            <option
+                              v-for="data in electorates"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-17" label="Local Authority:" label-for="input-17">
-                        <b-form-select class="mb-3" id="input-17" @change="all_wards($event);">
-                          <option value="1" selected disabled>Select Local Authority</option>
-                          <option
-                            v-for="data in localAuths"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_local_auth" label="Local Authority:" label-for="select_local_auth">
+                          <b-form-select class="mb-3" id="select_local_auth" @change="all_wards($event);" v-model="form_electoral.select_local_auth">
+                            <option value="1" selected disabled>Select Local Authority</option>
+                            <option
+                              v-for="data in localAuths"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-18" label="Ward:" label-for="input-18">
-                        <b-form-select class="mb-3" id="input-18" @change="all_gndivs($event);">
-                          <option value="1" selected disabled>Select Ward</option>
-                          <option
-                            v-for="data in wards"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_ward" label="Ward:" label-for="select_ward">
+                          <b-form-select class="mb-3" id="select_ward" @change="all_gndivs($event);" v-model="form_electoral.select_ward">
+                            <option value="1" selected disabled>Select Ward</option>
+                            <option
+                              v-for="data in wards"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-19" label="GN Division:" label-for="input-19">
-                        <b-form-select class="mb-3" id="input-19">
-                          <option value="1" selected disabled>Select GN Division</option>
-                          <option
-                            v-for="data in gnDivs"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_gn" label="GN Division:" label-for="select_gn">
+                          <b-form-select class="mb-3" id="select_gn" v-model="form_electoral.select_gn">
+                            <option value="1" selected disabled>Select GN Division</option>
+                            <option
+                              v-for="data in gnDivs"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                </b-row>
 
-              <div class="mt-2 clearfix">
-                <div class="float-right">
-                  <b-button variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                <div class="mt-2 clearfix">
+                  <div class="float-right">
+                    <b-button type="submit" variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                  </div>
                 </div>
-              </div>
+              </b-form>
             </b-tab>
 
             <b-tab title="Communication" :disabled="tabs.childTabsDisabled">
@@ -615,6 +617,15 @@ export default {
         select_religion: 1,
         text_remarks: '',
         select_status: 1
+      },
+      form_electoral: {
+        id: this.global_member_id,
+        select_province: 1,
+        select_district: 1,
+        select_electorate: 1,
+        select_local_auth: 1,
+        select_ward: 1,
+        select_gn: 1
       }
     }
   },
@@ -732,7 +743,7 @@ export default {
       console.log("personal form ready to submit, no validation errors!!");
 
       if (this.global_member_id > 0){
-        window.axios.put('/api/members/$(this.globalmember_id)', { params: this.form_personal }).then(({ data }) => {
+        window.axios.put('/api/members/' + this.globalmember_id, { params: this.form_personal }).then(({ data }) => {
           if (data.id) {
             this.global_member_id = data.id;
             this.$swal('Success', 'Member updated successfully!!', 'success');
@@ -747,6 +758,17 @@ export default {
             this.tabs.childTabsDisabled = false;
           }
         });
+      }
+    },
+    submitElectoral() {
+      console.log("electoral form ready to submit, no validation errors!!");
+
+      if (this.global_member_id > 0){
+        window.axios.put('/api/members/' + this.global_member_id, this.form_electoral).then(({ data }) => {
+          this.$swal('Success', 'Member updated successfully!!', 'success');
+        });
+      }else{
+        this.$swal('Error', 'Either you must enter and save personal data first, or select a member from search to update!', 'danger');
       }
     },
     limitText (count) {

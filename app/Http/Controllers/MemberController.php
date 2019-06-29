@@ -109,7 +109,19 @@ class MemberController extends Controller
      */
     public function update(Request $request, member $member)
     {
-        //
+        $id = $member->id;
+
+        $memberUpdate = member::findOrFail($id);
+
+        $memberUpdate->province_id = $request->select_province;
+        $memberUpdate->district_id = $request->select_district;
+        $memberUpdate->electorate_id = $request->select_electorate;
+        $memberUpdate->local_auth_id = $request->select_local_auth;
+        $memberUpdate->ward_id = $request->select_ward;
+        $memberUpdate->gn_id = $request->select_gn;
+        $memberUpdate->save();
+
+        return response(null, Response::HTTP_OK);
     }
 
     /**
