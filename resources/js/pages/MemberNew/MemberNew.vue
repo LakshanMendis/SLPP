@@ -18,7 +18,7 @@
                   <b-col md="3 p-4 bg-dark">
                     <b-row>
                       <b-col md="12" class="pb-1">
-                        <b-img thumbnail fluid src="http://leadership.hscni.net/Images/Uploads/anon_user.png" alt="Image 1"></b-img>
+                        <b-img class="prof_img" thumbnail fluid src="http://leadership.hscni.net/Images/Uploads/anon_user.png" alt="Image 1"></b-img>
                       </b-col>
                     </b-row>
 
@@ -209,7 +209,7 @@
             </b-tab>
 
             <b-tab title="Electoral" :disabled="tabs.childTabsDisabled">
-              <b-form name="formElectoral" id="formElectoral" @submit.stop.prevent="submitElectoral()" @reset.stop.prevent="resetAll()" novalidate>
+              <b-form name="formElectoral" id="formElectoral" @submit.stop.prevent="updateAll()" @reset.stop.prevent="resetAll()" novalidate>
                 <b-row>
                   <b-col md="12">
                     <b-row>
@@ -307,125 +307,137 @@
             </b-tab>
 
             <b-tab title="Communication" :disabled="tabs.childTabsDisabled">
-              <b-row>
-                <b-col md="12">
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-20" label="Address Line 1:" label-for="input-20">
-                        <b-form-input
-                          id="input-20"
-                          required
-                          placeholder="Address Line 1"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+              <b-form name="formCommunication" id="formCommunication" @submit.stop.prevent="updateAll()" @reset.stop.prevent="resetAll()" novalidate>
+                <b-row>
+                  <b-col md="12">
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_address_line1" label="Address Line 1:" label-for="text_address_line1">
+                          <b-form-input
+                            id="text_address_line1"
+                            name="text_address_line1"
+                            v-model="form_communication.text_address_line1"
+                            placeholder="Address Line 1"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-21" label="Address Line 2:" label-for="input-21">
-                        <b-form-input
-                          id="input-21"
-                          required
-                          placeholder="Address Line 2"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_address_line2" label="Address Line 2:" label-for="text_address_line2">
+                          <b-form-input
+                            id="text_address_line2"
+                            name="text_address_line2"
+                            v-model="form_communication.text_address_line2"
+                            placeholder="Address Line 2"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-22" label="City:" label-for="input-22">
-                        <b-form-input
-                          id="input-22"
-                          required
-                          placeholder="City"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_city" label="City:" label-for="text_city">
+                          <b-form-input
+                            id="text_city"
+                            name="text_city"
+                            v-model="form_communication.text_city"
+                            placeholder="City"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-23" label="Postal Code:" label-for="input-23">
-                        <b-form-input
-                          id="input-23"
-                          required
-                          placeholder="Postal Code"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_postalcode" label="Postal Code:" label-for="text_postalcode">
+                          <b-form-input
+                            id="text_postalcode"
+                            name="text_postalcode"
+                            v-model="form_communication.text_postalcode"
+                            placeholder="Postal Code"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-24" label="Mobile Number 1:" label-for="input-24">
-                        <b-form-input
-                          id="input-24"
-                          required
-                          placeholder="Mobile Number 1"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_mobile1" label="Mobile Number 1 (Whatsapp Preferred):" label-for="text_mobile1">
+                          <b-form-input
+                            id="text_mobile1"
+                            name="text_mobile1"
+                            v-model="form_communication.text_mobile1"
+                            placeholder="Mobile Number 1"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-25" label="Mobile Number 2:" label-for="input-25">
-                        <b-form-input
-                          id="input-25"
-                          required
-                          placeholder="Mobile Number 2"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_mobile2" label="Mobile Number 2:" label-for="text_mobile2">
+                          <b-form-input
+                            id="text_mobile2"
+                            name="text_mobile2"
+                            v-model="form_communication.text_mobile2"
+                            placeholder="Mobile Number 2"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-26" label="Home Tel:" label-for="input-26">
-                        <b-form-input
-                          id="input-26"
-                          required
-                          placeholder="Home Tel"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_home_tel" label="Home Tel:" label-for="text_home_tel">
+                          <b-form-input
+                            id="text_home_tel"
+                            name="text_home_tel"
+                            v-model="form_communication.text_home_tel"
+                            placeholder="Home Tel"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-27" label="Office Tel:" label-for="input-27">
-                        <b-form-input
-                          id="input-27"
-                          required
-                          placeholder="Office Tel"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_office_tel" label="Office Tel:" label-for="text_office_tel">
+                          <b-form-input
+                            id="text_office_tel"
+                            name="text_office_tel"
+                            v-model="form_communication.text_office_tel"
+                            placeholder="Office Tel"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-28" label="Fax:" label-for="input-28">
-                        <b-form-input
-                          id="input-28"
-                          required
-                          placeholder="Fax"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_fax" label="Fax:" label-for="text_fax">
+                          <b-form-input
+                            id="text_fax"
+                            name="text_fax"
+                            v-model="form_communication.text_fax"
+                            placeholder="Fax"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="6">
-                      <b-form-group id="input-group-29" label="E-Mail:" label-for="input-29">
-                        <b-form-input
-                          id="input-29"
-                          required
-                          placeholder="E-Mail"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_email" label="E-Mail:" label-for="text_email">
+                          <b-form-input
+                            id="text_email"
+                            name="text_email"
+                            v-model="form_communication.text_email"
+                            placeholder="E-Mail"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                </b-row>
 
-              <div class="mt-2 clearfix">
-                <div class="float-right">
-                  <b-button variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                <div class="mt-2 clearfix">
+                  <div class="float-right">
+                    <b-button type="submit" variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                  </div>
                 </div>
-              </div>
+              </b-form>
             </b-tab>
 
             <b-tab title="Categories" :disabled="tabs.childTabsDisabled">
@@ -471,82 +483,88 @@
             </b-tab>
 
             <b-tab title="Language" :disabled="tabs.childTabsDisabled">
-              <b-row>
-                <b-col md="12">
-                  <b-row>
-                    <b-col md="6">
-                      <b-form-group id="input-group-30" label="Preferred Language:" label-for="input-30">
-                        <b-form-select class="mb-3" id="input-30">
-                          <option value="1" selected disabled>Select Language</option>
-                          <option
-                            v-for="data in languages"
-                            :value="data.id"
-                            :key="data.id"
-                          >{{ data.language + " - " + data.caption }}</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+              <b-form name="formLanguage" id="formLanguage" @submit.stop.prevent="updateAll()" @reset.stop.prevent="resetAll()" novalidate>
+                <b-row>
+                  <b-col md="12">
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_pref_language" label="Preferred Language:" label-for="select_pref_lang">
+                          <b-form-select class="mb-3" id="select_pref_lang" name="select_pref_lang" v-model="form_language.select_pref_lang">
+                            <option value="1" selected disabled>Select Language</option>
+                            <option
+                              v-for="data in languages"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.language + " - " + data.caption }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <hr />
+                    <hr />
 
-                  <b-row>
-                    <b-col md="12">
-                      <p class="muted text-info">Fill following fields using <strong>selected language</strong>, if preferred language selection is <strong>not English</strong>!</p>
-                    </b-col>
-                  </b-row>
+                    <b-row>
+                      <b-col md="12">
+                        <p class="muted text-info">Fill following fields using <strong>selected language</strong>, if preferred language selection is <strong>not English</strong>!</p>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="12">
-                      <b-form-group id="input-group-31" label="Name:" label-for="input-31">
-                        <b-form-input
-                          id="input-31"
-                          required
-                          placeholder="Enter name with initials"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                    <b-row>
+                      <b-col md="12">
+                        <b-form-group id="group_pref_name" label="Name:" label-for="text_pref_name">
+                          <b-form-input
+                            id="text_pref_name" 
+                            name="text_pref_name" 
+                            v-model="form_language.text_pref_name"
+                            placeholder="Enter name with initials"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
 
-                  <b-row>
-                    <b-col md="4">
-                      <b-form-group id="input-group-32" label="Address Line 1:" label-for="input-32">
-                        <b-form-input
-                          id="input-32"
-                          required
-                          placeholder="Address Line 1"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+                    <b-row>
+                      <b-col md="4">
+                        <b-form-group id="group_pref_address_line1" label="Address Line 1:" label-for="text_pref_address_line1">
+                          <b-form-input
+                            id="text_pref_address_line1" 
+                            name="text_pref_address_line1" 
+                            v-model="form_language.text_pref_address_line1"
+                            placeholder="Address Line 1"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="4">
-                      <b-form-group id="input-group-33" label="Address Line 2:" label-for="input-33">
-                        <b-form-input
-                          id="input-33"
-                          required
-                          placeholder="Address Line 2"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
+                      <b-col md="4">
+                        <b-form-group id="group_pref_address_line2" label="Address Line 2:" label-for="text_pref_address_line2">
+                          <b-form-input
+                            id="text_pref_address_line2" 
+                            name="text_pref_address_line2" 
+                            v-model="form_language.text_pref_address_line2"
+                            placeholder="Address Line 2"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
 
-                    <b-col md="4">
-                      <b-form-group id="input-group-34" label="City:" label-for="input-34">
-                        <b-form-input
-                          id="input-34"
-                          required
-                          placeholder="Enter city"
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
+                      <b-col md="4">
+                        <b-form-group id="group_pref_city" label="City:" label-for="text_pref_city">
+                          <b-form-input
+                            id="text_pref_city"
+                            name="text_pref_city" 
+                            v-model="form_language.text_pref_city"
+                            placeholder="Enter city"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                </b-row>
 
-              <div class="mt-2 clearfix">
-                <div class="float-right">
-                  <b-button variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                <div class="mt-2 clearfix">
+                  <div class="float-right">
+                    <b-button type="submit" variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                  </div>
                 </div>
-              </div>
+              </b-form>
             </b-tab>
 
             <template slot="tabs">
@@ -626,6 +644,27 @@ export default {
         select_local_auth: 1,
         select_ward: 1,
         select_gn: 1
+      },
+      form_communication: {
+        id: this.global_member_id,
+        text_address_line1: '',
+        text_address_line2: '',
+        text_city: '',
+        text_postalcode: '',
+        text_mobile1: '',
+        text_mobile2: '',
+        text_home_tel: '',
+        text_office_tel: '',
+        text_fax: '',
+        text_email: ''
+      },
+      form_language: {
+        id: this.global_member_id,
+        select_pref_lang: 1,
+        text_pref_name: "",
+        text_pref_address_line1: "",
+        text_pref_address_line2: "",
+        text_pref_city: ""
       }
     }
   },
@@ -731,6 +770,67 @@ export default {
       this.form_personal.select_religion = 1;
       this.form_personal.text_remarks = '';
       this.form_personal.select_status = 1;
+
+      this.districts = [],
+      this.electorates = [],
+      this.localAuths = [],
+      this.wards = [],
+      this.gnDivs = [],
+
+      this.form_electoral.select_province = 1;
+      this.form_electoral.select_district = 1;
+      this.form_electoral.select_electorate = 1;
+      this.form_electoral.select_local_auth = 1;
+      this.form_electoral.select_ward = 1;
+      this.form_electoral.select_gn = 1;
+
+      this.form_communication.text_address_line1 = "";
+      this.form_communication.text_address_line2 = "";
+      this.form_communication.text_city = "";
+      this.form_communication.text_postalcode = "";
+      this.form_communication.text_mobile1 = "";
+      this.form_communication.text_mobile2 = "";
+      this.form_communication.text_home_tel = "";
+      this.form_communication.text_office_tel = "";
+      this.form_communication.text_fax = "";
+      this.form_communication.text_email = "";
+
+      this.form_language.select_pref_lang = 1;
+      this.form_language.text_pref_name = "";
+      this.form_language.text_pref_address_line1 = "";
+      this.form_language.text_pref_address_line2 = "";
+      this.form_language.text_pref_city = "";
+    },
+    updateAll() {
+      console.log("form ready to submit for update changes, no validation errors!!");
+
+      if (this.global_member_id > 0){
+        this.$v.form_personal.$touch();
+
+        if (this.$v.form_personal.$anyError) {
+          console.error("Form submit validate errors on personal form");
+          this.$swal('Validation Error', 'Please check personal form for validation errors!', 'error');
+          return
+        }
+
+        this.form_language.text_pref_name = (this.form_language.text_pref_name == "") ? this.form_personal.text_firstname + " " + this.form_personal.text_lastname : this.form_language.text_pref_name;
+        this.form_language.text_pref_address_line1 = (this.form_language.text_pref_address_line1 == "") ? this.form_communication.text_address_line1 : this.form_language.text_pref_address_line1;
+        this.form_language.text_pref_address_line2 = (this.form_language.text_pref_address_line2 == "") ? this.form_communication.text_address_line2 : this.form_language.text_pref_address_line2;
+        this.form_language.text_pref_city = (this.form_language.text_pref_city == "") ? this.form_communication.text_city : this.form_language.text_pref_city;
+
+        let form_all = {};
+
+        form_all = $.extend(form_all, this.form_personal);
+        form_all = $.extend(form_all, this.form_electoral);
+        form_all = $.extend(form_all, this.form_communication);
+        form_all = $.extend(form_all, this.form_language);
+
+        window.axios.put('/api/members/' + this.global_member_id, form_all).then(({ data }) => {
+          this.$swal('Success', 'Member updated successfully!!', 'success');
+        });
+      }else{
+        this.$swal('Error', 'Either you must enter and save personal data first, or select a member from search to update!', 'error');
+      }
     },
     submitPersonal(){
       this.$v.form_personal.$touch();
@@ -743,13 +843,7 @@ export default {
       console.log("personal form ready to submit, no validation errors!!");
 
       if (this.global_member_id > 0){
-        window.axios.put('/api/members/' + this.globalmember_id, { params: this.form_personal }).then(({ data }) => {
-          if (data.id) {
-            this.global_member_id = data.id;
-            this.$swal('Success', 'Member updated successfully!!', 'success');
-            this.tabs.childTabsDisabled = false;
-          }
-        });
+        this.updateAll();
       }else{
         window.axios.get('/api/members/create', { params: this.form_personal }).then(({ data }) => {
           if (data.id) {
@@ -760,17 +854,6 @@ export default {
         });
       }
     },
-    submitElectoral() {
-      console.log("electoral form ready to submit, no validation errors!!");
-
-      if (this.global_member_id > 0){
-        window.axios.put('/api/members/' + this.global_member_id, this.form_electoral).then(({ data }) => {
-          this.$swal('Success', 'Member updated successfully!!', 'success');
-        });
-      }else{
-        this.$swal('Error', 'Either you must enter and save personal data first, or select a member from search to update!', 'danger');
-      }
-    },
     limitText (count) {
       return `and ${count} other members`
     },
@@ -779,7 +862,7 @@ export default {
 
       const para = { 'search': query };
 
-      window.axios.get('/api/members', { params: para }).then(({ data }) => {
+      window.axios.get('/api/members/search', { params: para }).then(({ data }) => {
         this.search.loading = false;
         this.search.load_members = data;
       });
@@ -799,6 +882,36 @@ export default {
       this.form_personal.select_religion = this.search.select_member.religion_id;
       this.form_personal.text_remarks = this.search.select_member.remarks;
       this.form_personal.select_status = this.search.select_member.status;
+
+      this.all_districts(this.search.select_member.province_id);
+      this.all_electorates(this.search.select_member.province_id);
+      this.all_local_auths(this.search.select_member.district_id);
+      this.all_wards(this.search.select_member.local_auth_id);
+      this.all_gndivs(this.search.select_member.ward_id);
+
+      this.form_electoral.select_province = this.search.select_member.province_id;
+      this.form_electoral.select_district = this.search.select_member.district_id;
+      this.form_electoral.select_electorate = this.search.select_member.electorate_id;
+      this.form_electoral.select_local_auth = this.search.select_member.local_auth_id;
+      this.form_electoral.select_ward = this.search.select_member.ward_id;
+      this.form_electoral.select_gn = this.search.select_member.gn_id;
+
+      this.form_communication.text_address_line1 = this.search.select_member.address_line1;
+      this.form_communication.text_address_line2 = this.search.select_member.address_line2;
+      this.form_communication.text_city = this.search.select_member.city;
+      this.form_communication.text_postalcode = this.search.select_member.postal_code;
+      this.form_communication.text_mobile1 = this.search.select_member.mobile1;
+      this.form_communication.text_mobile2 = this.search.select_member.mobile2;
+      this.form_communication.text_home_tel = this.search.select_member.home_phone;
+      this.form_communication.text_office_tel = this.search.select_member.office_phone;
+      this.form_communication.text_fax = this.search.select_member.fax;
+      this.form_communication.text_email = this.search.select_member.email;
+
+      this.form_language.select_pref_lang = this.search.select_member.pref_lang_id;
+      this.form_language.text_pref_name = this.search.select_member.pref_lang_name;
+      this.form_language.text_pref_address_line1 = this.search.select_member.pref_lang_address_line1;
+      this.form_language.text_pref_address_line2 = this.search.select_member.pref_lang_address_line2;
+      this.form_language.text_pref_city = this.search.select_member.pref_lang_city;
     }
   },
   created() {

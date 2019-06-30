@@ -57,6 +57,8 @@ Route::resource('/languages', 'LanguageController', [
     'except' => ['edit', 'show', 'store']
 ]);
 
+Route::get('/members/search', 'MemberController@search');
+
 Route::resource('/members', 'MemberController', [
     'except' => ['edit', 'store']
 ]);
