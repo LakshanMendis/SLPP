@@ -62,3 +62,9 @@ Route::get('/members/search', 'MemberController@search');
 Route::resource('/members', 'MemberController', [
     'except' => ['edit', 'store']
 ]);
+
+Route::get('/categories/values', 'CategoryController@values');
+
+Route::resource('/categories', 'CategoryController', [
+    'except' => ['edit', 'store']
+]);

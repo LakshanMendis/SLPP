@@ -441,20 +441,28 @@
             </b-tab>
 
             <b-tab title="Categories" :disabled="tabs.childTabsDisabled">
-              <b-row>
-                <b-col md="12" class="pt-3 pb-2">
-                  <Category 
-                    v-for="(category, index) in categories" 
-                    :key="category.id" 
-                    :id="category.textId" 
-                    :label="category.label" 
-                    :options="category.options"
-                    v-model="category_values[index].value"
-                    @change="onChangeCategory"
-                  >
-                  </Category>
-                </b-col>
-              </b-row>
+              <b-form name="formCategories" id="formCategories" @submit.stop.prevent="updateAll()" @reset.stop.prevent="resetAll()" novalidate>
+                <b-row>
+                  <b-col md="12" class="pt-3 pb-2">
+                    <CategoryMultiple 
+                      v-for="(category, index) in categories" 
+                      :key="category.id" 
+                      :id="category.textId" 
+                      :label="category.label" 
+                      :placeholder="category.label" 
+                      :options="category.options"
+                      v-model="category_values[index].value"
+                    >
+                    </CategoryMultiple>
+                  </b-col>
+                </b-row>
+
+                <div class="mt-2 clearfix">
+                  <div class="float-right">
+                    <b-button type="submit" variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                  </div>
+                </div>
+              </b-form>
             </b-tab>
 
             <b-tab title="Language" :disabled="tabs.childTabsDisabled">
@@ -570,55 +578,19 @@
 
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
-import Category from 'RESO/js/components/Category/Category';
+import CategoryMultiple from 'RESO/js/components/CategoryMultiple/CategoryMultiple';
 import { required } from 'vuelidate/lib/validators';
 import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'MemberNew',
-  components: { Widget, Multiselect, Category },
+  components: { Widget, Multiselect, CategoryMultiple },
   data() {
     return {
-      categories: [
-        {
-          id: 1,
-          textId: 'select-cat-1',
-          label: 'Category',
-          options: [
-            { id: 1, name: 'Parliament' },
-            { id: 2, name: 'Provincial' },
-            { id: 3, name: 'Local Authority' },
-            { id: 4, name: 'SLPP Union' },
-            { id: 5, name: 'SLPP Party' },
-            { id: 6, name: 'SLPP Intellectual' },
-            { id: 7, name: 'SLPP Member' }
-          ]
-        },
-        {
-          id: 2,
-          textId: 'select-cat-2',
-          label: 'Profession',
-          options: [
-            { id: 1, name: 'Lawyer' },
-            { id: 2, name: 'Doctor' },
-            { id: 3, name: 'Lecturer' },
-            { id: 4, name: 'Teacher' },
-            { id: 5, name: 'Engineer' },
-            { id: 6, name: 'Enterpreneur' },
-            { id: 7, name: 'Other' }
-          ]
-        }
-      ],
-      category_values:[
-        {
-          id: 1,
-          value: null
-        },
-        {
-          id: 2,
-          value: null
-        }
-      ],
+      category_loaded: false,
+      categories: [],
+      category_values:[],
+      category_init_values:[],
       tabs:{
         showHelpAlert: true,
         childTabsDisabled: true
@@ -763,8 +735,27 @@ export default {
         this.languages = data;
       });
     },
+    get_categories() {
+      window.axios.get('/api/categories').then(({ data }) => {
+        this.categories = data;
+
+        this.category_loaded = true;
+      });
+    },
+    get_category_values() {
+      const member_id = this.global_member_id;
+      const para = { 'member_id': member_id };
+
+      window.axios.get('/api/categories/values', { params: para }).then(({ data }) => {
+        this.category_values = data;
+
+        if (!this.category_loaded) {
+          this.category_init_values = data;
+          this.get_categories();
+        }
+      });
+    },
     show_why_disabled(){
-      console.log("clicked");
       if (this.tabs.childTabsDisabled){
         alert ('Please fill basic/personal details first or search and select existing member to edit!!');
       }
@@ -811,11 +802,27 @@ export default {
       this.form_communication.text_fax = "";
       this.form_communication.text_email = "";
 
+      this.category_values = this.category_init_values;
+
       this.form_language.select_pref_lang = 1;
       this.form_language.text_pref_name = "";
       this.form_language.text_pref_address_line1 = "";
       this.form_language.text_pref_address_line2 = "";
       this.form_language.text_pref_city = "";
+    },
+    saveCategories() {
+      const member_id = this.global_member_id;
+    
+      let submit_array = {};
+      let member_array = { member_id : member_id };
+      let values_array = { values: this.category_values };
+
+      submit_array = $.extend(submit_array, member_array);
+      submit_array = $.extend(submit_array, values_array);
+
+      window.axios.get('/api/categories/create', { params: submit_array }).then(({ data }) => {
+        console.log(data);
+      });
     },
     updateAll() {
       console.log("form ready to submit for update changes, no validation errors!!");
@@ -828,6 +835,8 @@ export default {
           this.$swal('Validation Error', 'Please check personal form for validation errors!', 'error');
           return
         }
+
+        this.saveCategories();
 
         this.form_language.text_pref_name = (this.form_language.text_pref_name == "") ? this.form_personal.text_firstname + " " + this.form_personal.text_lastname : this.form_language.text_pref_name;
         this.form_language.text_pref_address_line1 = (this.form_language.text_pref_address_line1 == "") ? this.form_communication.text_address_line1 : this.form_language.text_pref_address_line1;
@@ -923,16 +932,13 @@ export default {
       this.form_communication.text_fax = this.search.select_member.fax;
       this.form_communication.text_email = this.search.select_member.email;
 
+      this.get_category_values();
+
       this.form_language.select_pref_lang = this.search.select_member.pref_lang_id;
       this.form_language.text_pref_name = this.search.select_member.pref_lang_name;
       this.form_language.text_pref_address_line1 = this.search.select_member.pref_lang_address_line1;
       this.form_language.text_pref_address_line2 = this.search.select_member.pref_lang_address_line2;
       this.form_language.text_pref_city = this.search.select_member.pref_lang_city;
-    },
-    onChangeCategory (v) {
-      console.log('Changed trigerred');
-      console.log(v);
-      console.log(this.category_values);
     }
   },
   created() {
@@ -941,6 +947,7 @@ export default {
     this.all_religions();
     this.all_provinces();
     this.all_languages();
+    this.get_category_values();
   }
 };
 </script>
