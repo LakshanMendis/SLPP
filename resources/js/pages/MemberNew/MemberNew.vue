@@ -18,7 +18,7 @@
                   <b-col md="3 p-4 bg-dark">
                     <b-row>
                       <b-col md="12" class="pb-1">
-                        <b-img class="prof_img" thumbnail fluid src="http://leadership.hscni.net/Images/Uploads/anon_user.png" alt="Image 1"></b-img>
+                        <b-img class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Image 1"></b-img>
                       </b-col>
                     </b-row>
 
