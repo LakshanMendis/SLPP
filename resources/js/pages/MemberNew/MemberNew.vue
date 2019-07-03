@@ -18,7 +18,8 @@
                   <b-col md="3 p-4 bg-dark" id="image-container" class="image-overlay">
                     <b-row>
                       <b-col md="12" class="pb-1">
-                        <b-img id="image-preview" class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Profile Image"></b-img>
+                        <b-img v-if="!profile_img.url" id="image-preview" class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Default Image"></b-img>
+                        <img v-if="profile_img.url" id="image-preview-raw" class="prof_img_raw" :src="profile_img.url" alt="Profile Image" />
                       </b-col>
                     </b-row>
 
@@ -626,7 +627,8 @@ export default {
         image: '',
         upload_progress_show: false,
         upload_progress_done: 0,
-        upload_progress_max: 100
+        upload_progress_max: 100,
+        url: null
       },
       form_personal: {
         id: this.global_member_id,
@@ -784,6 +786,7 @@ export default {
 
       if (!this.profile_img.blocked) this.$refs['image-browser'].reset();
       this.profile_img.blocked = true;
+      this.profile_img.url = null;
 
       this.$v.$reset();
 
@@ -919,6 +922,16 @@ export default {
       this.tabs.childTabsDisabled = false;
       this.profile_img.blocked = false;
 
+      setTimeout(() => {
+        if (!this.profile_img.blocked) this.$refs['image-browser'].reset();
+      }, 500);
+
+      if (this.search.select_member.image_path != null && this.search.select_member.image_path != "") {
+        this.profile_img.url = this.search.select_member.image_path;
+      }else{
+        this.profile_img.url = null;
+      }
+
       this.form_personal.text_membership_id = this.search.select_member.membership_id;
       this.form_personal.select_title = this.search.select_member.title_id;
       this.form_personal.text_firstname = this.search.select_member.firstname;
@@ -983,7 +996,10 @@ export default {
 
       window.axios.post('/api/members/image/upload', formData, config).then(({ data }) => {
         this.profile_img.upload_progress_show = false;
-        console.log(data);
+        this.profile_img.url = data.url;
+      }).catch((e) => {
+        this.profile_img.upload_progress_show = false;
+        this.$swal('Upload Failed!', 'Please check the image file size and type', 'error');
       });
     }
   },

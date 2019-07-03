@@ -51,10 +51,19 @@ class MemberController extends Controller
 
     public function imageUpload (Request $request)
     {
+        $member_id = $request->member_id;
         $imageName = time().'.'.$request->image->getClientOriginalExtension();
         $request->image->move(public_path('images/members'), $imageName);
+
+        $url = "/images/members/".$imageName;
+
+        $memberUpdate = member::findOrFail($member_id);
+
+        $memberUpdate->image_path = $url;
+
+        $memberUpdate->save();
         
-    	return response()->json(['success'=>'You have successfully upload image.']);
+    	return response()->json(['success'=>'You have successfully upload image.', 'url'=>$url]);
     }
 
     /**
