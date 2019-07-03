@@ -25,7 +25,7 @@
                     <b-row>
                       <b-col md="12">
                         <b-form-file
-                          placeholder="Choose a image..."
+                          placeholder="Choose an image..."
                           drop-placeholder="Drop file here..."
                         ></b-form-file>
                       </b-col>
