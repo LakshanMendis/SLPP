@@ -33,7 +33,13 @@
             </b-col>
           </b-row>
 
-          <ckeditor class="document-editor" :editor="editor" :config="editorConfig" @ready="onReady"></ckeditor>
+          <ckeditor
+            class="document-editor"
+            :editor="editor"
+            :config="editorConfig"
+            v-model="editorData"
+            @ready="onReady">
+          </ckeditor>
 
           <div class="mt-4 clearfix">
             <div class="float-right">
@@ -51,8 +57,10 @@
 
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+
+/* In case you need to enable classic editor, un-comment following lines */
+//import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 export default {
   name: 'TemplateNew',
@@ -64,7 +72,8 @@ export default {
       editor: DecoupledEditor,
       editorConfig: {
         // The configuration of the editor.
-      }
+      },
+      editorData: ''
     }
   },
   methods: {
