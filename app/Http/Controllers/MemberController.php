@@ -49,6 +49,14 @@ class MemberController extends Controller
         return response($matching_members, Response::HTTP_OK);
     }
 
+    public function imageUpload (Request $request)
+    {
+        $imageName = time().'.'.$request->image->getClientOriginalExtension();
+        $request->image->move(public_path('images/members'), $imageName);
+        
+    	return response()->json(['success'=>'You have successfully upload image.']);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

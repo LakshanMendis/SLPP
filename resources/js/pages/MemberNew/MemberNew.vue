@@ -15,21 +15,31 @@
             <b-tab title="Personal" active>
               <b-form name="formPersonal" id="formPersonal" @submit.stop.prevent="submitPersonal()" @reset.stop.prevent="resetAll()" novalidate>
                 <b-row>
-                  <b-col md="3 p-4 bg-dark">
+                  <b-col md="3 p-4 bg-dark" id="image-container" class="image-overlay">
                     <b-row>
                       <b-col md="12" class="pb-1">
-                        <b-img class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Image 1"></b-img>
+                        <b-img id="image-preview" class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Profile Image"></b-img>
                       </b-col>
                     </b-row>
 
                     <b-row>
                       <b-col md="12">
+                        <b-progress v-if="profile_img.upload_progress_show" :value="profile_img.upload_progress_done" :max="profile_img.upload_progress_max" show-progress animated></b-progress>
                         <b-form-file
+                          v-if="!profile_img.blocked"
+                          id="image-browser"
+                          ref="image-browser"
                           placeholder="Choose an image..."
                           drop-placeholder="Drop file here..."
+                          :disabled="profile_img.blocked"
+                          @change="imageChanged"
                         ></b-form-file>
                       </b-col>
                     </b-row>
+
+                    <b-tooltip v-if="profile_img.blocked" target="image-container" placement="bottom">
+                      Only allowed to upload image after <strong>saving a new member</strong> or after <strong>selecting an existing member</strong>!!
+                    </b-tooltip>
                   </b-col>
                   <b-col md="9">
                     <b-row>
@@ -611,6 +621,13 @@ export default {
       wards: [],
       gnDivs: [],
       languages: [],
+      profile_img: {
+        blocked: true,
+        image: '',
+        upload_progress_show: false,
+        upload_progress_done: 0,
+        upload_progress_max: 100
+      },
       form_personal: {
         id: this.global_member_id,
         text_membership_id: '',
@@ -765,6 +782,9 @@ export default {
       this.global_member_id = 0;
       this.tabs.childTabsDisabled = true;
 
+      if (!this.profile_img.blocked) this.$refs['image-browser'].reset();
+      this.profile_img.blocked = true;
+
       this.$v.$reset();
 
       this.form_personal.text_membership_id = '';
@@ -857,7 +877,7 @@ export default {
         this.$swal('Error', 'Either you must enter and save personal data first, or select a member from search to update!', 'error');
       }
     },
-    submitPersonal(){
+    submitPersonal() {
       this.$v.form_personal.$touch();
 
       if (this.$v.form_personal.$anyError) {
@@ -867,7 +887,7 @@ export default {
 
       console.log("personal form ready to submit, no validation errors!!");
 
-      if (this.global_member_id > 0){
+      if (this.global_member_id > 0) {
         this.updateAll();
       }else{
         window.axios.get('/api/members/create', { params: this.form_personal }).then(({ data }) => {
@@ -875,6 +895,7 @@ export default {
             this.global_member_id = data.id;
             this.$swal('Success', 'Member created successfully!!', 'success');
             this.tabs.childTabsDisabled = false;
+            this.profile_img.blocked = false;
           }
         });
       }
@@ -892,10 +913,11 @@ export default {
         this.search.load_members = data;
       });
     },
-    selectedMember (selectedOption){
+    selectedMember (selectedOption) {
       this.search.select_member = selectedOption;
       this.global_member_id = this.search.select_member.id;
       this.tabs.childTabsDisabled = false;
+      this.profile_img.blocked = false;
 
       this.form_personal.text_membership_id = this.search.select_member.membership_id;
       this.form_personal.select_title = this.search.select_member.title_id;
@@ -939,6 +961,30 @@ export default {
       this.form_language.text_pref_address_line1 = this.search.select_member.pref_lang_address_line1;
       this.form_language.text_pref_address_line2 = this.search.select_member.pref_lang_address_line2;
       this.form_language.text_pref_city = this.search.select_member.pref_lang_city;
+    },
+    imageChanged (e) {
+      this.profile_img.image = e.target.files[0];
+      const member_id = this.global_member_id;
+      this.profile_img.upload_progress_show = true;
+
+      const config = {
+        headers: { 
+          'content-type': 'multipart/form-data',
+          'X-CSRF-TOKEN': token.csrf
+        },
+        onUploadProgress: uploadEvent => {
+          this.profile_img.upload_progress_done = Math.round(uploadEvent.loaded / uploadEvent.total * 100);
+        }
+      }
+
+      let formData = new FormData();
+      formData.append('image', this.profile_img.image);
+      formData.append('member_id', member_id);
+
+      window.axios.post('/api/members/image/upload', formData, config).then(({ data }) => {
+        this.profile_img.upload_progress_show = false;
+        console.log(data);
+      });
     }
   },
   created() {

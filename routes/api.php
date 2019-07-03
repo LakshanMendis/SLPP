@@ -58,10 +58,9 @@ Route::resource('/languages', 'LanguageController', [
 ]);
 
 Route::get('/members/search', 'MemberController@search');
+Route::post('/members/image/upload', 'MemberController@imageUpload');
 
-Route::resource('/members', 'MemberController', [
-    'except' => ['edit', 'store']
-]);
+Route::resource('/members', 'MemberController');
 
 Route::get('/categories/values', 'CategoryController@values');
 
