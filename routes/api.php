@@ -67,3 +67,7 @@ Route::get('/categories/values', 'CategoryController@values');
 Route::resource('/categories', 'CategoryController', [
     'except' => ['edit', 'store']
 ]);
+
+Route::resource('/templates', 'TemplateController', [
+    'except' => ['edit', 'store']
+]);

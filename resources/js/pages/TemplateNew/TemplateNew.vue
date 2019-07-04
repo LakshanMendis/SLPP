@@ -11,23 +11,81 @@
     <b-row>
       <b-col lg="12">
         <Widget>
+          <b-form name="form_main" id="form_main" @submit.stop.prevent="saveTemplate()" @reset.stop.prevent="resetAll()" novalidate>
           <b-row>
             <b-col md="6">
-              <b-form-group id="input-group-1" label="Template Name:" label-for="input-1">
+              <b-form-group id="gr-name" label="Template Name:" label-for="name">
                 <b-form-input
-                  id="input-1"
-                  required
+                  id="name"
                   placeholder="Enter template name"
+                  v-model="form_data.name"
                 ></b-form-input>
               </b-form-group>
             </b-col>
 
             <b-col md="6">
-              <b-form-group id="input-group-2" label="Template Language:" label-for="input-2">
-                <b-form-select class="mb-3" id="input-2">
-                  <option value="si">Sinhala</option>
-                  <option value="en">English</option>
-                  <option value="ta">Tamil</option>
+              <b-form-group id="gr-language" label="Template Language:" label-for="language">
+                <b-form-select
+                  class="mb-1"
+                  id="language"
+                  name="language"
+                  v-model="form_data.language"
+                >
+                  <option value="0" selected disabled>Select Language</option>
+                  <option
+                    v-for="data in languages"
+                    :value="data.id"
+                    :key="data.id"
+                  >{{ data.language + " - " + data.caption }}</option>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+
+          <b-row>
+            <b-col md="6">
+              <b-form-group id="gr-date" label="Date:" label-for="date">
+                <b-form-input
+                  type="date"
+                  id="date"
+                  placeholder="Enter template name"
+                  v-model="form_data.date"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="6">
+              <b-form-group id="gr-target" label="Target:" label-for="target">
+                <b-form-select
+                  class="mb-1"
+                  id="target"
+                  name="target"
+                  v-model="form_data.target"
+                >
+                  <option value="" selected disabled>Select Target</option>
+                  <option value="PAPER-A4">Paper: A4</option>
+                  <option value="PAPER-LEGAL">Paper: Legal</option>
+                  <option value="PAPER-LABELS">Paper: Labels</option>
+                  <option value="PAPER-ENVELOPE">Paper: Envelope</option>
+                  <option value="SMS">SMS</option>
+                  <option value="WHATSAPP">WhatsApp</option>
+                  <option value="EMAIL">E-Mail</option>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+
+          <b-row>
+            <b-col md="6">
+              <b-form-group id="gr-status" label="Status:" label-for="status">
+                <b-form-select
+                  class="mb-4"
+                  id="status"
+                  name="status"
+                  v-model="form_data.status"
+                >
+                  <option value="1">Active</option>
+                  <option value="0">Inactive</option>
                 </b-form-select>
               </b-form-group>
             </b-col>
@@ -36,19 +94,20 @@
           <ckeditor
             class="document-editor"
             :editor="editor"
-            :config="editorConfig"
-            v-model="editorData"
+            :config="editor_config"
+            v-model="form_data.editor_data"
             @ready="onReady">
           </ckeditor>
 
           <div class="mt-4 clearfix">
             <div class="float-right">
-              <b-button variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+              <b-button type="submit" variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
             </div>
             <div class="float-left">
-              <b-button variant="warning" size="md"><i class="fa fa-plus"></i> New</b-button>
+              <b-button type="reset" variant="warning" size="md"><i class="fa fa-plus"></i> New</b-button>
             </div>
           </div>
+          </b-form>
         </Widget>
       </b-col>
     </b-row>
@@ -69,21 +128,58 @@ export default {
   },
   data() {
     return {
+      current_date: '',
+      languages: [],
       editor: DecoupledEditor,
-      editorConfig: {
+      editor_config: {
         // The configuration of the editor.
       },
-      editorData: ''
+      form_data: {
+        name: '',
+        language: 0,
+        date: this.current_date,
+        target: '',
+        status: 1,
+        editor_data: ''
+      }
     }
   },
   methods: {
-      onReady( editor )  {
-          // Insert the toolbar before the editable area.
-          editor.ui.getEditableElement().parentElement.insertBefore(
-              editor.ui.view.toolbar.element,
-              editor.ui.getEditableElement()
-          );
-      }
+    all_languages() {
+      window.axios.get('/api/languages').then(({ data }) => {
+        this.languages = data;
+      });
+    },
+    today() {
+      this.current_date = new Date().toJSON().slice(0,10);
+    },
+    onReady(editor) {
+      // Insert the toolbar before the editable area.
+      editor.ui.getEditableElement().parentElement.insertBefore(
+          editor.ui.view.toolbar.element,
+          editor.ui.getEditableElement()
+      );
+    },
+    saveTemplate() {
+      window.axios.get('/api/templates/create', { params: this.form_data }).then(({ data }) => {
+        if (data.id) {
+          this.$swal('Success', 'Template created successfully!!', 'success');
+          this.resetAll();
+        }
+      });
+    },
+    resetAll() {
+      this.form_data.name = "";
+      this.form_data.language = 0;
+      this.form_data.date = this.current_date;
+      this.form_data.target = "";
+      this.form_data.status = 1;
+      this.form_data.editor_data = "";
+    }
+  },
+  created() {
+    this.all_languages();
+    this.today();
   }
 };
 </script>
