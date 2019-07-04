@@ -117,6 +117,7 @@
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+//import Mention from '@ckeditor/ckeditor5-mention';
 
 /* In case you need to enable classic editor, un-comment following lines */
 //import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -132,7 +133,26 @@ export default {
       languages: [],
       editor: DecoupledEditor,
       editor_config: {
-        // The configuration of the editor.
+        /*plugins: [ Mention ],
+        mention: {
+          feeds: [
+            {
+              marker: '@',
+              feed: [ 
+                '@MEMBERSHIP_ID',
+                '@TITLE',
+                '@FIRST_NAME',
+                '@LAST_NAME',
+                '@CALLING_NAME',
+                '@FULL_NAME',
+                '@NIC',
+                '@NATIONALITY',
+                '@RELIGION'
+              ],
+              minimumCharacters: 1
+            }
+          ]
+        }*/
       },
       form_data: {
         name: '',
