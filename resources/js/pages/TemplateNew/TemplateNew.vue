@@ -76,6 +76,37 @@
           </b-row>
 
           <b-row>
+            <b-col md=3 class="pt-4">
+              <b-form-checkbox
+                class="mb-3"
+                id="is-base-template"
+                v-model="form_data.is_base_template"
+                name="is-base-template"
+                :value="true"
+                :unchecked-value="false"
+              >
+                Make this base template
+              </b-form-checkbox>
+            </b-col>
+
+            <b-col md="3">
+              <b-form-group id="gr-select-base-template" label="Select Base Template:" label-for="select-base-template">
+                <b-form-select
+                  class="mb-2"
+                  id="select-base-template"
+                  name="select-base-template"
+                  :disabled="form_data.is_base_template"
+                  v-model="form_data.select_base_template"
+                >
+                  <option
+                    v-for="data in active_base_templates"
+                    :value="data.id"
+                    :key="data.id"
+                  >{{ data.name + "/" + data.template_date + "/" + data.target }}</option>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
             <b-col md="6">
               <b-form-group id="gr-status" label="Status:" label-for="status">
                 <b-form-select
@@ -131,6 +162,7 @@ export default {
     return {
       current_date: '',
       languages: [],
+      active_base_templates: [],
       editor: DecoupledEditor,
       editor_config: {
         /*plugins: [ Mention ],
@@ -159,6 +191,8 @@ export default {
         language: 0,
         date: this.current_date,
         target: '',
+        is_base_template: true,
+        select_base_template: 0,
         status: 1,
         editor_data: ''
       }
@@ -168,6 +202,13 @@ export default {
     all_languages() {
       window.axios.get('/api/languages').then(({ data }) => {
         this.languages = data;
+      });
+    },
+    all_active_base_templates() {
+      let para = { 'query': 'all-active-base' };
+
+      window.axios.get('/api/templates', { params: para }).then(({ data }) => {
+        this.active_base_templates = data;
       });
     },
     today() {
@@ -183,6 +224,7 @@ export default {
     saveTemplate() {
       window.axios.get('/api/templates/create', { params: this.form_data }).then(({ data }) => {
         if (data.id) {
+          this.all_active_base_templates();
           this.$swal('Success', 'Template created successfully!!', 'success');
           this.resetAll();
         }
@@ -199,6 +241,7 @@ export default {
   },
   created() {
     this.all_languages();
+    this.all_active_base_templates();
     this.today();
   }
 };
