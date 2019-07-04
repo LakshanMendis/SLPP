@@ -24,11 +24,23 @@ import Locations from 'RESO/js/pages/Locations/Locations';
 import Departments from 'RESO/js/pages/Departments/Departments';
 import Designations from 'RESO/js/pages/Designations/Designations';
 
+/* Master Pages */
+import Titles from 'RESO/js/pages/Titles/Titles';
+import Nationality from 'RESO/js/pages/Nationality/Nationality';
+import Religions from 'RESO/js/pages/Religions/Religions';
+import Provinces from 'RESO/js/pages/Provinces/Provinces';
+import Districts from 'RESO/js/pages/Districts/Districts';
+import Electorates from 'RESO/js/pages/Electorates/Electorates';
+import LocalAuthorities from 'RESO/js/pages/LocalAuthorities/LocalAuthorities';
+import Wards from 'RESO/js/pages/Wards/Wards';
+import GNDivisions from 'RESO/js/pages/GNDivisions/GNDivisions';
+
 /* Member Pages */
 import MemberView from 'RESO/js/pages/MemberView/MemberView';
 import MemberNew from 'RESO/js/pages/MemberNew/MemberNew';
 import MemberUpdate from 'RESO/js/pages/MemberUpdate/MemberUpdate';
 import MemberTagging from 'RESO/js/pages/MemberTagging/MemberTagging';
+import Categories from 'RESO/js/pages/Categories/Categories';
 
 /* Templating Pages */
 import TemplateView from 'RESO/js/pages/TemplateView/TemplateView';
@@ -78,6 +90,11 @@ const routes = [
                 path: 'member/tagging',
                 name: 'Tag Members',
                 component: MemberTagging,
+            },
+            {
+                path: 'member/categories',
+                name: 'Categories',
+                component: Categories,
             },
             {
                 path: 'templating/view',
@@ -144,35 +161,75 @@ const routes = [
                 name: 'Modules',
                 component: Modules,
             },
-
             {
                 path: 'admin/permissions',
                 name: 'Permissions',
                 component: Permissions,
             },
-
             {
                 path: 'admin/companies',
                 name: 'Companies',
                 component: Companies,
             },
-
             {
                 path: 'admin/locations',
                 name: 'Locations',
                 component: Locations,
             },
-
             {
                 path: 'admin/departments',
                 name: 'Departments',
                 component: Departments,
             },
-
             {
                 path: 'admin/designations',
                 name: 'Designations',
                 component: Designations,
+            },
+            {
+                path: 'master/titles',
+                name: 'Titles',
+                component: Titles,
+            },
+            {
+                path: 'master/nationality',
+                name: 'Nationality',
+                component: Nationality,
+            },
+            {
+                path: 'master/religions',
+                name: 'Religions',
+                component: Religions,
+            },
+            {
+                path: 'master/provinces',
+                name: 'Provinces',
+                component: Provinces,
+            },
+            {
+                path: 'master/districts',
+                name: 'Districts',
+                component: Districts,
+            },
+            {
+                path: 'master/electorates',
+                name: 'Electorates',
+                component: Electorates,
+            },
+            {
+                path: 'master/localauthorities',
+                name: 'LocalAuthorities',
+                component: LocalAuthorities,
+            },
+            {
+                path: 'master/wards',
+                name: 'Wards',
+                component: Wards,
+            },
+            {
+                path: 'master/gndivisions',
+                name: 'GNDivisions',
+                component: GNDivisions,
             },
         ],
     },

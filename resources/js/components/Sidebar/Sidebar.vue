@@ -34,6 +34,24 @@
       />
       <NavLink
               :activeItem="activeItem"
+              header="Master"
+              link="/app/master"
+              iconName="flaticon-link"
+              index="master"
+              :childrenLinks="[
+          { header: 'Titles', link: '/app/master/titles' },
+          { header: 'Nationality', link: '/app/master/nationality' },
+          { header: 'Religions', link: '/app/master/religions' },
+          { header: 'Provinces', link: '/app/master/provinces' },
+          { header: 'Districts', link: '/app/master/districts' },
+          { header: 'Electorates', link: '/app/master/electorates' },
+          { header: 'Local Authorities', link: '/app/master/localauthorities' },
+          { header: 'Wards', link: '/app/master/wards' },
+          { header: 'GN Divisions', link: '/app/master/gndivisions' },
+        ]"
+      />
+      <NavLink
+              :activeItem="activeItem"
               header="Member"
               link="/app/member"
               iconName="flaticon-user"
@@ -43,6 +61,7 @@
           { header: 'Update/Inactive', link: '/app/member/update-inactive' },
           { header: 'View', link: '/app/member/view' },
           { header: 'Tagging', link: '/app/member/tagging' },
+          { header: 'Categories', link: '/app/member/categories' },
         ]"
       />
       <NavLink
@@ -58,7 +77,7 @@
           { header: 'Posting', link: '/app/templating/posting' },
         ]"
       />
-      <NavLink
+      <!--<NavLink
               :activeItem="activeItem"
               header="Guides"
               link="/app/guide"
@@ -73,7 +92,7 @@
           { header: 'Icons', link: '/app/guide/icons' },
           { header: 'Maps', link: '/app/guide/maps' },
         ]"
-      />
+      />-->
     </ul>
   </nav>
   </b-collapse>

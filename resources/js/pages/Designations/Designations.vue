@@ -9,9 +9,41 @@
     </h1>
 
     <b-row>
-      <b-col lg="6">
+      <b-col lg="12">
         <Widget>
-          {{message}}
+          <b-form id="formPersonal" @submit.stop.prevent="submitPersonal()">
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="input-group-1" label="Designation:" label-for="input-1">
+                          <b-form-input
+                            id="input-1"
+                            required
+                            value=""
+                            placeholder="Enter Designation"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-col>
+
+                      <b-col md="6">
+                        <b-form-group id="input-group-2" label="Status:" label-for="input-2">
+                          <b-form-select class="mb-3" id="input-2">
+                            <option value="" selected disabled>Select Status</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                   </b-form>
+
+            <div class="mt-4 clearfix">
+              <div class="float-right">
+                <b-button variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+              </div>
+              <div class="float-left">
+                <b-button variant="warning" size="md"><i class="fa fa-plus"></i> New</b-button>
+              </div>
+            </div>
         </Widget>
       </b-col>
     </b-row>

@@ -13,7 +13,7 @@
         <Widget>
         <b-form id="formPersonal" @submit.stop.prevent="submitPersonal()">
           <b-row>
-                  <b-col md="4 p-4 bg-light">
+                  <b-col md="4 p-4 bg-dark">
                     <b-row>
                       <b-col md="12" class="pb-1">
                         <b-img thumbnail fluid src="http://leadership.hscni.net/Images/Uploads/anon_user.png" alt="Image 1"></b-img>

@@ -89,7 +89,7 @@
                         </b-form-group>
                       </b-col>
 
-                     <b-col md="6">
+                     <!-- <b-col md="6">
                         <b-form-group id="input-group-8" label="Is in menu:" label-for="input-8">
                           <b-form-select class="mb-3" id="input-8">
                             <option value="" selected disabled>Select</option>
@@ -97,7 +97,7 @@
                             <option value="male">menu 2</option>
                           </b-form-select>
                         </b-form-group>
-                      </b-col>
+                      </b-col> -->
 
                       <b-col md="6">
                         <b-form-group id="input-group-9" label="Menu Level:" label-for="input-9">
@@ -118,7 +118,8 @@
                           </b-form-select>
                         </b-form-group>
                       </b-col>
-
+                      
+                      
                       <b-col md="3">
                       <b-form-checkbox
                         id="checkbox-1"
