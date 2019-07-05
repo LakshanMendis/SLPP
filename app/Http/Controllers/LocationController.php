@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\location;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class LocationController extends Controller
 {
@@ -12,9 +13,40 @@ class LocationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = $request->input('query');
+
+        switch ($query){
+            case 'all':
+                $result = location::orderBy('location', 'asc')
+                ->get()
+                ->jsonSerialize();
+            break;
+
+            case 'all-active':
+                $result = location::where('status','=',1)
+                ->orderBy('location', 'asc')
+                ->get()
+                ->jsonSerialize();
+            break;
+
+            case 'all-inactive':
+                $result = location::where('status','=',0)
+                ->orderBy('location', 'asc')
+                ->get()
+                ->jsonSerialize();
+            break;
+
+            default:
+                $result = location::where('status','=',1)
+                ->orderBy('location', 'asc')
+                ->get()
+                ->jsonSerialize();
+            break;
+        }
+
+        return response($result, Response::HTTP_OK);
     }
 
     /**

@@ -71,3 +71,15 @@ Route::resource('/categories', 'CategoryController', [
 Route::resource('/templates', 'TemplateController', [
     'except' => ['edit', 'store']
 ]);
+
+Route::resource('/sms_senders', 'SmsSenderController', [
+    'except' => ['edit', 'store']
+]);
+
+Route::resource('/email_senders', 'MailSenderController', [
+    'except' => ['edit', 'store']
+]);
+
+Route::resource('/locations', 'LocationController', [
+    'except' => ['edit', 'store']
+]);

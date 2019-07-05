@@ -36,6 +36,6 @@ class CreateTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('templates');
+        Schema::dropIfExists('slpp_templates');
     }
 }
