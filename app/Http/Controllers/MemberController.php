@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\member;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -47,6 +48,54 @@ class MemberController extends Controller
         }
 
         return response($matching_members, Response::HTTP_OK);
+    }
+
+    public function count (Request $request) {
+        $province = $request->input('select_province');
+        $district = $request->input('select_district');
+        $electorate = $request->input('select_electorate');
+        $local_auth = $request->input('select_local_auth');
+        $ward = $request->input('select_ward');
+        $gn_div = $request->input('select_gn');
+        $categories = $request->input('categories');
+
+        $query = "";
+        $where = "";
+
+        if (isset($categories)){
+            foreach ($categories as $key => $category) {
+                $category_obj = json_decode($category);
+                $category_id = $category_obj->id;
+                $category_value = $category_obj->value;
+    
+                if ($category_value == NULL) {
+                    continue;
+                }
+    
+                $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+                $where .= " MAP.category_id = ".$category_id." AND MAP.option_id = ".$category_value." ";
+                $where .= " ) ";
+            }
+        }
+
+        $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+        $where .= " MEM.province_id = ".$province." AND ";
+        $where .= " MEM.district_id = ".$district." AND ";
+        $where .= " MEM.electorate_id = ".$electorate." AND ";
+        $where .= " MEM.local_auth_id = ".$local_auth." AND ";
+        $where .= " MEM.ward_id = ".$ward." AND ";
+        $where .= " MEM.gn_id = ".$gn_div." ";
+        $where .= " ) ";
+
+        $query = " SELECT
+        COUNT(MEM.id) AS C
+        FROM
+        slpp_members AS MEM
+        LEFT JOIN slpp_member_category_maps AS MAP ON MEM.id = MAP.member_id ".$where;
+
+        $result = DB::select($query);
+
+        return response($result, Response::HTTP_OK);
     }
 
     public function imageUpload (Request $request)

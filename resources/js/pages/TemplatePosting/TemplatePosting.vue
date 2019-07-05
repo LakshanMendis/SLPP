@@ -11,7 +11,7 @@
     <b-row>
       <b-col lg="12">
         <Widget>
-          <form-wizard step-size="sm" title="Post Wizard" subtitle="Follow steps to send or schedule mail campaign!">
+          <form-wizard step-size="sm" title="Post Wizard" subtitle="Follow steps to send or schedule mail campaign!" @on-complete="finished()">
             <tab-content title="Media">
               <h4>Select media to distribute</h4>
               <b-form-group label=" ">
@@ -211,7 +211,7 @@
 
                       <b-col md="6">
                         <b-form-group id="group_gn" label="GN Division:" label-for="select_gn">
-                          <b-form-select class="mb-3" id="select_gn" v-model="form_electoral.select_gn">
+                          <b-form-select class="mb-3" id="select_gn" @change="get_member_count();" v-model="form_electoral.select_gn">
                             <option value="1" selected disabled>Select GN Division</option>
                             <option
                               v-for="data in gnDivs"
@@ -237,6 +237,7 @@
                       :placeholder="category.label" 
                       :options="category.options"
                       v-model="category_values[index].value"
+                      @change="get_member_count();"
                     >
                     </Category>
                   </b-col>
@@ -294,7 +295,7 @@
                       <b-row align-h="center">
                         <b-col md="6">
                           <li class="mt-3 mb-3">
-                            <strong>{{ selected_media.length }} Medias</strong> Selected: 
+                            <strong>{{ selected_media.length }} Media</strong> Selected: 
                             <b-badge
                               v-for="media in selected_media"
                               :key="media"
@@ -526,6 +527,7 @@ export default {
     reset_this(){
       this.search.select_member = "";
       this.get_category_values();
+      this.get_member_count ();
 
       this.districts = [],
       this.electorates = [],
@@ -564,6 +566,69 @@ export default {
     },
     selectedMember (selectedOption) {
       this.search.select_member = selectedOption;
+    },
+    get_member_count () {
+      let data_all = {};
+      let category_values = {
+        categories: this.category_values
+      }
+
+      data_all = $.extend(data_all, this.form_electoral);
+      data_all = $.extend(data_all, category_values);
+
+      window.axios.get('/api/members/count', { params: data_all }).then(({ data }) => {
+        this.summary.filtered_member_count = data[0].C;
+      });
+    },
+    viewMembers () {
+
+    },
+    viewMember () {
+      
+    },
+    finished () {
+      let para = {};
+      let message_options = {
+        template_id: this.selected_template,
+        language_id: this.selected_language
+      };
+      let category_values = {
+        categories: this.category_values
+      }
+
+      if (this.target_type == "multiple") {
+        para = $.extend(para, this.form_electoral);
+        para = $.extend(para, category_values);
+        para = $.extend(para, message_options);
+      }else{
+        para = {
+          member_id: this.search.select_member.id
+        }
+
+        para = $.extend(para, message_options);
+      }
+
+      this.selected_media.forEach(el => {
+        switch (el) {
+          case 'SMS':
+            window.axios.get('/api/posts/sms', { params: para }).then(({ data }) => {
+              console.log(data);
+            });
+          break;
+          
+          case 'PRINT':
+            window.axios.get('/api/posts/print', { params: para }).then(({ data }) => {
+              console.log(data);
+            });
+          break;
+
+          case 'EMAIL':
+            window.axios.get('/api/posts/email', { params: para }).then(({ data }) => {
+              console.log(data);
+            });
+          break;
+        }
+      });
     }
   },
   created() {
@@ -574,6 +639,7 @@ export default {
     this.all_provinces();
     this.get_category_values();
     this.all_active_templates();
+    this.get_member_count ();
   }
 };
 </script>

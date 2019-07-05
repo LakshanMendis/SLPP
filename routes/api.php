@@ -58,6 +58,7 @@ Route::resource('/languages', 'LanguageController', [
 ]);
 
 Route::get('/members/search', 'MemberController@search');
+Route::get('/members/count', 'MemberController@count');
 Route::post('/members/image/upload', 'MemberController@imageUpload');
 
 Route::resource('/members', 'MemberController');
@@ -83,3 +84,7 @@ Route::resource('/email_senders', 'MailSenderController', [
 Route::resource('/locations', 'LocationController', [
     'except' => ['edit', 'store']
 ]);
+
+Route::get('/posts/sms', 'PostController@sms');
+Route::get('/posts/print', 'PostController@print');
+Route::get('/posts/email', 'PostController@email');
