@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\categoryHeader;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoryHeaderController extends Controller
 {
@@ -22,9 +23,17 @@ class CategoryHeaderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $category_head = new categoryHeader;
+
+        $category_head->category = $request->input('name');
+        $category_head->status = $request->input('status');
+        $category_head->created_by = 0;
+
+        $category_head->save();
+
+        return response($category_head->jsonSerialize(), Response::HTTP_CREATED);
     }
 
     /**
