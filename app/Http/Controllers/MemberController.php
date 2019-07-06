@@ -124,7 +124,7 @@ class MemberController extends Controller
     {
         $member = new member;
 
-        $member->membership_id = $request->text_membership_id;
+        $member->membership_id = (!isset($request->text_membership_id)) ? "" : $request->input('text_membership_id');
         $member->title_id = $request->select_title;
         $member->firstname = $request->text_firstname;
         $member->lastname = (!isset($request->text_lastname)) ? "" : $request->text_lastname;
@@ -199,6 +199,8 @@ class MemberController extends Controller
         $pref_lang_address_line2 = (!empty($request->text_pref_address_line2)) ? $request->text_pref_address_line2 : $com_address_line2;
         $pref_lang_city = (!empty($request->text_pref_city)) ? $request->text_pref_city : $com_city;
 
+        $living_abroad = (isset($request->check_live_abroad) && $request->check_live_abroad == 'true') ? 1 : 0;
+
         $memberUpdate = member::findOrFail($id);
 
         $memberUpdate->membership_id = (isset($request->text_membership_id)) ? $request->text_membership_id : "";
@@ -229,6 +231,10 @@ class MemberController extends Controller
         $memberUpdate->office_phone = (isset($request->text_office_tel)) ? $request->text_office_tel : "";
         $memberUpdate->fax = (isset($request->text_fax)) ? $request->text_fax : "";
         $memberUpdate->email = (isset($request->text_email)) ? $request->text_email : "";
+
+        $memberUpdate->living_abroad = $living_abroad;
+        $memberUpdate->country_id = (isset($request->select_country_id)) ? $request->select_country_id : 202;
+        $memberUpdate->dialing_code = (isset($request->select_dialing_code)) ? $request->select_dialing_code : '+94';
 
         $memberUpdate->pref_lang_id = $pref_lang_id;
         $memberUpdate->pref_lang_name = $pref_lang_name;

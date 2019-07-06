@@ -29,6 +29,10 @@ Route::resource('/religions', 'ReligionController', [
     'except' => ['edit', 'show', 'store']
 ]);
 
+Route::resource('/countries', 'CountryController', [
+    'except' => ['edit', 'show', 'store']
+]);
+
 Route::resource('/provinces', 'ProvinceController', [
     'except' => ['edit', 'show', 'store']
 ]);

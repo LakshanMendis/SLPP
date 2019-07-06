@@ -289,54 +289,55 @@
               <b-row align-h="center">
                 <b-col md="12">
                   <b-card bg-variant="maroon" text-variant="white" header-tag="header" footer-tag="footer" class="mb-4">
-                    <h4 slot="header" class="mb-0">Summary</h4>
+                    <h3 slot="header" class="mb-0"><center><strong>Summary</strong></center></h3>
 
                     <b-card-text>
                       <b-row align-h="center">
                         <b-col md="6">
                           <li class="mt-3 mb-3">
-                            <strong>{{ selected_media.length }} Media</strong> Selected: 
+                            <h4><strong>{{ selected_media.length }} Media</strong> Selected:
                             <b-badge
                               v-for="media in selected_media"
                               :key="media"
                               variant="light"
-                              class="ml-2 pull-right"
+                              class="ml-2 mt-2 pull-right"
                             >{{ media }}</b-badge>
+                            </h4>
                           </li>
 
-                          <li v-if="!sms_option_disabled" class="mt-3 mb-3">
-                            <strong>SMS</strong> using:
-                            <b-badge variant="light" class="ml-2 pull-right">{{ selected_sms_sender.sender_id }}</b-badge>
+                          <li v-if="!sms_option_disabled" class="mt-4 mb-4">
+                            <h4><strong>SMS</strong> using:
+                            <b-badge variant="light" class="ml-2 mt-2 pull-right">{{ selected_sms_sender.sender_id }}</b-badge></h4>
                           </li>
 
-                          <li v-if="!email_option_disabled" class="mt-3 mb-3">
-                            <strong>EMAIL</strong> using:
-                            <b-badge variant="light" class="ml-2 pull-right">{{ selected_email_sender.email }}</b-badge>
+                          <li v-if="!email_option_disabled" class="mt-4 mb-4">
+                            <h4><strong>EMAIL</strong> using:
+                            <b-badge variant="light" class="ml-2 pull-right">{{ selected_email_sender.email }}</b-badge></h4>
                           </li>
 
-                          <li v-if="!print_option_disabled" class="mt-3 mb-3">
-                            <strong>PRINT</strong> using:
-                            <b-badge variant="light" class="ml-2 pull-right">{{ selected_print_sender.location }}</b-badge>
+                          <li v-if="!print_option_disabled" class="mt-4 mb-4">
+                            <h4><strong>PRINT</strong> using:
+                            <b-badge variant="light" class="ml-2 pull-right">{{ selected_print_sender.location }}</b-badge></h4>
                           </li>
 
-                          <li v-if="show_multiple" class="mt-3 mb-3">
-                            <strong>Multiple</strong> audience: target
+                          <li v-if="show_multiple" class="mt-4 mb-4">
+                            <h4><strong>Multiple</strong> audience: target
                             <b-badge variant="light" class="ml-2 pull-right">{{ summary.filtered_member_count }} Members</b-badge>
                             <b-button class="ml-2 pull-right" size="xs" @click="viewMembers" variant="primary">
                               <i class="fa fa-search"></i>
-                            </b-button>
+                            </b-button></h4>
                           </li>
 
-                          <li v-if="!show_multiple" class="mt-3 mb-3">
-                            <strong>Single</strong> audience: target
+                          <li v-if="!show_multiple" class="mt-4 mb-4">
+                            <h4><strong>Single</strong> audience: target
                             <b-badge variant="light" class="ml-2 pull-right">{{ "[" + search.select_member.membership_id + "] " + search.select_member.firstname + " " + search.select_member.lastname }}</b-badge>
                             <b-button class="ml-2 pull-right" size="xs" @click="viewMember" variant="primary">
                               <i class="fa fa-search"></i>
-                            </b-button>
+                            </b-button></h4>
                           </li>
 
-                          <li class="mt-3 mb-3"><strong>Template</strong> selection <b-badge variant="light" class="ml-2 pull-right">{{ summary.template_badge }}</b-badge></li>
-                          <li class="mt-3 mb-3"><strong>{{ summary.language_badge }}</strong> Language Selection</li>
+                          <li class="mt-4 mb-4"><h4><strong>Template</strong> selection <b-badge variant="light" class="ml-2 pull-right">{{ summary.template_badge }}</b-badge></h4></li>
+                          <li class="mt-4 mb-4"><h4><strong>{{ summary.language_badge }}</strong> Language Selection</h4></li>
                         </b-col>
                       </b-row>
                     </b-card-text>

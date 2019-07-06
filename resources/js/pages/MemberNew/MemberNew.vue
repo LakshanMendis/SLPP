@@ -11,7 +11,7 @@
     <b-row>
       <b-col lg="12">
         <Widget>
-          <b-tabs content-class="mt-3">
+          <b-tabs v-model="tab_index" content-class="mt-3">
             <b-tab title="Personal" active>
               <b-form name="formPersonal" id="formPersonal" @submit.stop.prevent="submitPersonal()" @reset.stop.prevent="resetAll()" novalidate>
                 <b-row>
@@ -45,18 +45,13 @@
                   <b-col md="9">
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="group_membership_id" label="*Membership ID:" label-for="text_membership_id" :class="{ 'form-group--error': $v.form_personal.text_membership_id.$error }">
+                        <b-form-group id="group_membership_id" label="*Membership ID:" label-for="text_membership_id">
                           <b-form-input
                             id="text_membership_id"
                             name="text_membership_id"
                             placeholder="Enter Membership ID"
-                            aria-describedby="feedback_membership_id"
-                            v-model="$v.form_personal.text_membership_id.$model"
-                            :state="$v.form_personal.text_membership_id.$dirty ? !$v.form_personal.text_membership_id.$error : null"
+                            v-model="form_personal.text_membership_id"
                           ></b-form-input>
-                          <b-form-invalid-feedback id="feedback_membership_id">
-                            This is a required field.
-                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                       <b-col md="6">
@@ -132,8 +127,11 @@
                             v-model="$v.form_personal.text_nic.$model"
                             :state="$v.form_personal.text_nic.$dirty ? !$v.form_personal.text_nic.$error : null"
                           ></b-form-input>
-                          <b-form-invalid-feedback id="feedback_nic">
+                          <b-form-invalid-feedback v-if="!$v.form_personal.text_nic.required" id="feedback_nic">
                             This is a required field.
+                          </b-form-invalid-feedback>
+                          <b-form-invalid-feedback v-if="!$v.form_personal.text_nic.nic" id="feedback_nic">
+                            Enter valid NIC no.
                           </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
@@ -371,72 +369,149 @@
 
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="group_mobile1" label="Mobile Number 1 (Whatsapp Preferred):" label-for="text_mobile1">
-                          <b-form-input
-                            id="text_mobile1"
-                            name="text_mobile1"
-                            v-model="form_communication.text_mobile1"
-                            placeholder="Mobile Number 1"
-                          ></b-form-input>
+                        <b-form-group id="group_mobile1" label="Mobile Number 1 (Whatsapp Preferred):" label-for="text_mobile1" :class="{ 'form-group--error': $v.form_communication.text_mobile1.$error }">
+                          <b-input-group>
+                            <b-input-group-prepend is-text style="margin:0 !important; padding:0 !important;">
+                              <b-form-select size="sm" id="country-code" name="country-code" v-model="form_communication.select_dialing_code" style="height:20px;padding-top: 0 !important;">
+                                <option
+                                  v-for="data in countries"
+                                  :value="data.dialing"
+                                  :key="data.id"
+                                >{{ data.dialing }}
+                                </option>
+                              </b-form-select>
+                            </b-input-group-prepend>
+                            <b-form-input
+                              class="pb-2"
+                              id="text_mobile1"
+                              name="text_mobile1"
+                              placeholder="Mobile Number 1"
+                              aria-describedby="feedback_mobile1"
+                              v-model="$v.form_communication.text_mobile1.$model"
+                              :state="$v.form_communication.text_mobile1.$dirty ? !$v.form_communication.text_mobile1.$error : null"
+                            ></b-form-input>
+                            <b-form-invalid-feedback v-if="!$v.form_communication.text_mobile1.phone" id="feedback_mobile1">
+                              Enter valid phone number.
+                            </b-form-invalid-feedback>
+                          </b-input-group>
                         </b-form-group>
                       </b-col>
 
                       <b-col md="6">
-                        <b-form-group id="group_mobile2" label="Mobile Number 2:" label-for="text_mobile2">
+                        <b-form-group id="group_mobile2" label="Mobile Number 2:" label-for="text_mobile2" :class="{ 'form-group--error': $v.form_communication.text_mobile2.$error }">
                           <b-form-input
                             id="text_mobile2"
                             name="text_mobile2"
-                            v-model="form_communication.text_mobile2"
                             placeholder="Mobile Number 2"
+                            aria-describedby="feedback_mobile2"
+                            v-model="$v.form_communication.text_mobile2.$model"
+                            :state="$v.form_communication.text_mobile2.$dirty ? !$v.form_communication.text_mobile2.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback v-if="!$v.form_communication.text_mobile2.phone" id="feedback_mobile2">
+                            Enter valid phone number.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
 
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="group_home_tel" label="Home Tel:" label-for="text_home_tel">
+                        <b-form-group id="group_home_tel" label="Home Tel:" label-for="text_home_tel" :class="{ 'form-group--error': $v.form_communication.text_home_tel.$error }">
                           <b-form-input
                             id="text_home_tel"
                             name="text_home_tel"
-                            v-model="form_communication.text_home_tel"
                             placeholder="Home Tel"
+                            aria-describedby="feedback_home_tel"
+                            v-model="$v.form_communication.text_home_tel.$model"
+                            :state="$v.form_communication.text_home_tel.$dirty ? !$v.form_communication.text_home_tel.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback v-if="!$v.form_communication.text_home_tel.phone" id="feedback_home_tel">
+                            Enter valid phone number.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
 
                       <b-col md="6">
-                        <b-form-group id="group_office_tel" label="Office Tel:" label-for="text_office_tel">
+                        <b-form-group id="group_office_tel" label="Office Tel:" label-for="text_office_tel" :class="{ 'form-group--error': $v.form_communication.text_office_tel.$error }">
                           <b-form-input
                             id="text_office_tel"
                             name="text_office_tel"
-                            v-model="form_communication.text_office_tel"
                             placeholder="Office Tel"
+                            aria-describedby="feedback_office_tel"
+                            v-model="$v.form_communication.text_office_tel.$model"
+                            :state="$v.form_communication.text_office_tel.$dirty ? !$v.form_communication.text_office_tel.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback v-if="!$v.form_communication.text_office_tel.phone" id="feedback_office_tel">
+                            Enter valid phone number.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
                     </b-row>
 
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="group_fax" label="Fax:" label-for="text_fax">
+                        <b-form-group id="group_fax" label="Fax:" label-for="text_fax" :class="{ 'form-group--error': $v.form_communication.text_fax.$error }">
                           <b-form-input
                             id="text_fax"
                             name="text_fax"
-                            v-model="form_communication.text_fax"
                             placeholder="Fax"
+                            aria-describedby="feedback_fax"
+                            v-model="$v.form_communication.text_fax.$model"
+                            :state="$v.form_communication.text_fax.$dirty ? !$v.form_communication.text_fax.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback v-if="!$v.form_communication.text_fax.phone" id="feedback_fax">
+                            Enter valid fax number.
+                          </b-form-invalid-feedback>
                         </b-form-group>
                       </b-col>
 
                       <b-col md="6">
-                        <b-form-group id="group_email" label="E-Mail:" label-for="text_email">
+                        <b-form-group id="group_email" label="E-Mail:" label-for="text_email" :class="{ 'form-group--error': $v.form_communication.text_email.$error }">
                           <b-form-input
                             id="text_email"
                             name="text_email"
-                            v-model="form_communication.text_email"
                             placeholder="E-Mail"
+                            aria-describedby="feedback_email"
+                            v-model="$v.form_communication.text_email.$model"
+                            :state="$v.form_communication.text_email.$dirty ? !$v.form_communication.text_email.$error : null"
                           ></b-form-input>
+                          <b-form-invalid-feedback v-if="!$v.form_communication.text_email.email" id="feedback_email">
+                            Enter valid email.
+                          </b-form-invalid-feedback>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group id="group_live_abroad" label="If living abroad, select country:" label-for="select_country">
+                          <b-input-group>
+                            <b-input-group-prepend is-text>
+                              <b-form-checkbox
+                                id="check_live_abroad"
+                                name="check_live_abroad"
+                                v-model="form_communication.check_live_abroad"
+                                :value="true"
+                                :unchecked-value="false"
+                              >
+                                Live Abroad
+                              </b-form-checkbox>
+                            </b-input-group-prepend>
+                            <b-form-select
+                              id="select_country"
+                              name="select_country"
+                              v-model="form_communication.select_country_id"
+                              :disabled="!form_communication.check_live_abroad"
+                              @change="country_changed"
+                            >
+                              <option
+                                v-for="data in countries"
+                                :value="data.id"
+                                :key="data.id"
+                              >{{ data.name }}
+                              </option>
+                            </b-form-select>
+                          </b-input-group>
                         </b-form-group>
                       </b-col>
                     </b-row>
@@ -574,7 +649,7 @@
             </template>
 
             <template slot="tabs" v-if="tabs.childTabsDisabled">
-              <b-alert variant="maroon" class="help-alert animated bounceIn delay-2s" dismissible v-model="tabs.showHelpAlert">
+              <b-alert variant="maroon" class="help-alert animated bounceIn" dismissible v-model="tabs.showHelpAlert">
                 <i class="fa fa-info-circle mr-1"></i> If other tabs has blocked, except <strong>Personal Tab</strong>: Try enter and <strong>save personal details</strong>, or <strong>search and select member</strong>!
               </b-alert>
             </template>
@@ -590,14 +665,18 @@
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
 import CategoryMultiple from 'RESO/js/components/CategoryMultiple/CategoryMultiple';
-import { required } from 'vuelidate/lib/validators';
+import { required, helpers, email } from 'vuelidate/lib/validators';
 import Multiselect from 'vue-multiselect';
+
+const nic = helpers.regex('nic', /(^[0-9]{9}[vVxX]$)|(^[0-9]{12}$)/gm);
+const phone = helpers.regex('phone', /(^[0-9]{6,12}$)/);
 
 export default {
   name: 'MemberNew',
   components: { Widget, Multiselect, CategoryMultiple },
   data() {
     return {
+      tab_index: 0,
       category_loaded: false,
       categories: [],
       category_values:[],
@@ -615,6 +694,7 @@ export default {
       titles: [],
       nationalities: [],
       religions: [],
+      countries: [],
       provinces: [],
       districts: [],
       electorates: [],
@@ -663,7 +743,10 @@ export default {
         text_home_tel: '',
         text_office_tel: '',
         text_fax: '',
-        text_email: ''
+        text_email: '',
+        select_dialing_code: '+94',
+        check_live_abroad: false,
+        select_country_id: 202
       },
       form_language: {
         id: this.global_member_id,
@@ -677,10 +760,17 @@ export default {
   },
   validations: {
     form_personal: {
-      text_membership_id: { required },
       text_firstname: { required },
       text_callingname: { required },
-      text_nic: { required },
+      text_nic: { required, nic },
+    },
+    form_communication: {
+      text_mobile1: { phone },
+      text_mobile2: { phone },
+      text_home_tel: { phone },
+      text_office_tel: { phone },
+      text_fax: { phone },
+      text_email: { email },
     },
   },
   methods: {
@@ -697,6 +787,11 @@ export default {
     all_religions() {
       window.axios.get('/api/religions').then(({ data }) => {
         this.religions = data;
+      });
+    },
+    all_countries() {
+      window.axios.get('/api/countries').then(({ data }) => {
+        this.countries = data;
       });
     },
     all_provinces() {
@@ -824,6 +919,9 @@ export default {
       this.form_communication.text_office_tel = "";
       this.form_communication.text_fax = "";
       this.form_communication.text_email = "";
+      this.form_communication.select_dialing_code = '+94';
+      this.form_communication.check_live_abroad = false;
+      this.form_communication.select_country_id = 202;
 
       this.category_values = this.category_init_values;
 
@@ -852,10 +950,19 @@ export default {
 
       if (this.global_member_id > 0){
         this.$v.form_personal.$touch();
+        this.$v.form_communication.$touch();
 
         if (this.$v.form_personal.$anyError) {
           console.error("Form submit validate errors on personal form");
+          this.tab_index = 0;
           this.$swal('Validation Error', 'Please check personal form for validation errors!', 'error');
+          return
+        }
+
+        if (this.$v.form_communication.$anyError) {
+          console.error("Form submit validate errors on communication form");
+          this.tab_index = 2;
+          this.$swal('Validation Error', 'Please check communication form for validation errors!', 'error');
           return
         }
 
@@ -966,6 +1073,9 @@ export default {
       this.form_communication.text_office_tel = this.search.select_member.office_phone;
       this.form_communication.text_fax = this.search.select_member.fax;
       this.form_communication.text_email = this.search.select_member.email;
+      this.form_communication.select_dialing_code = this.search.select_member.dialing_code;
+      this.form_communication.check_live_abroad = (this.search.select_member.living_abroad == 1) ? true : false;
+      this.form_communication.select_country_id = this.search.select_member.country_id;
 
       this.get_category_values();
 
@@ -1001,12 +1111,22 @@ export default {
         this.profile_img.upload_progress_show = false;
         this.$swal('Upload Failed!', 'Please check the image file size and type', 'error');
       });
+    },
+    country_changed (id){
+      const matching_country_el = this.countries.filter((country, idx) => {
+        return country.id === id;
+      }, id);
+
+      if (matching_country_el.length > 0){
+        this.form_communication.select_dialing_code = matching_country_el[0].dialing;
+      }
     }
   },
   created() {
     this.all_titles();
     this.all_nationalities();
     this.all_religions();
+    this.all_countries();
     this.all_provinces();
     this.all_languages();
     this.get_category_values();
