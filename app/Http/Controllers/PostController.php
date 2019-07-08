@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use PDFTC;
+use PDF;
 
 class PostController extends Controller
 {
-    public $mentions_array = array(
-        '@TITLE' => 'TITLE',
-        '@FIRSTNAME' => 'FIRST_NAME',
-        '@LASTNAME' => 'LAST_NAME',
-        '@FULLNAME' => 'FULL_NAME',
-        '@CALLINGNAME' => 'CALLING_NAME'
-    );
+    protected $mentions_array;
+
+    public function __construct()
+    {
+        $this->mentions_array = array(
+            '@TITLE',
+            '@FIRSTNAME',
+            '@LASTNAME',
+            '@FULLNAME',
+            '@CALLINGNAME'
+        );
+    }
 
     public function sms(Request $request)
     {
@@ -350,14 +355,14 @@ class PostController extends Controller
 
                 // Generate where clause for other filters or media specific filters
                 $where .= (empty($where)) ? " WHERE " : " AND ";
-                $where .= " MEM.mobile1 != '' ";
-
-                $where .= (empty($where)) ? " WHERE " : " AND ";
                 $where .= " MEM.status = 1 ";
 
         
                 // Taking into account selected language option
                 if ($language == 0) {
+                    $i = 0;
+                    $all_pages = "";
+
                     // Automatic language option
                     // Group preferred languages from filtered members
                     $gr_pref_lang_query = "SELECT
@@ -372,6 +377,7 @@ class PostController extends Controller
 
                     foreach ($gr_pref_lang_result as $this_lang_obj) {
                         $this_lang_id = $this_lang_obj->LANG_ID;
+                        $lang_where = "";
 
                         $language_fetch_query = "SELECT
                         LANG.`language` AS `NAME`,
@@ -387,7 +393,7 @@ class PostController extends Controller
 
                         $this_lang_name = $language_fetch_result[0]->NAME;
                         $this_lang_caption = $language_fetch_result[0]->CAPTION;
-                        $this_lang_code = $language_fetch_result[0]->CODE;
+                        $this_lang_code = strtoupper($language_fetch_result[0]->CODE);
 
                         // Check this base template include this language
                         $language_check_query = "SELECT
@@ -404,11 +410,13 @@ class PostController extends Controller
 
                         $language_check_result = DB::select($language_check_query);
 
-                        $i = 0;
-
                         if (count($language_check_result) > 0) {
                             $this_temp_id = $language_check_result[0]->ID;
                             $this_temp_content = $language_check_result[0]->CONTENT;
+
+                            // Generate where clause for this language
+                            $lang_where .= (empty($where)) ? " WHERE " : " AND ";
+                            $lang_where .= " MEM.pref_lang_id = $this_lang_id ";
 
                             $member_data_fetch_query = "SELECT
                             MEM.id AS ID,
@@ -470,33 +478,48 @@ class PostController extends Controller
                             INNER JOIN master_electorates AS ELEC ON MEM.electorate_id = ELEC.id
                             INNER JOIN master_local_auths AS LAU ON MEM.local_auth_id = LAU.id
                             INNER JOIN master_wards AS WAR ON MEM.ward_id = WAR.id
-                            INNER JOIN master_gramasevas AS GND ON MEM.gn_id = GND.id";
+                            INNER JOIN master_gramasevas AS GND ON MEM.gn_id = GND.id ".$where.$lang_where." GROUP BY MEM.id";
+                            
+                            $member_data_fetch_result = DB::select($member_data_fetch_query);
 
-                            $font_path_iskpota =  storage_path('fonts\iskpota.ttf');
-                            $font_path_freeserif =  storage_path('fonts\FreeSerif.ttf');
+                            foreach ($member_data_fetch_result as $member_data) {
+                                $current_temp_content = $this_temp_content;
+                                
+                                foreach ($this->mentions_array as $keyword) {
+                                    $replacement = "";
+                                    $col_name = "";
 
-                            $data[$i] = "<!doctype html>
-                            <html>
-                            <head>
-                            <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
-                            <style>
-                                /*@font-face {
-                                    font-family: 'iskpota';
-                                    font-style: normal;
-                                    font-weight: normal;
-                                    src: url('$font_path_iskpota') format('truetype');
+                                    switch ($keyword){
+                                        case '@TITLE':
+                                            $col_name = 'T_'.$this_lang_code;
+                                            $replacement = $member_data->$col_name;
+                                        break;
+
+                                        case '@FIRSTNAME':
+                                            $replacement = $member_data->PREF_NAME;
+                                        break;
+
+                                        case '@LASTNAME':
+                                            $replacement = $member_data->PREF_NAME;
+                                        break;
+
+                                        case '@FULLNAME':
+                                            $replacement = $member_data->PREF_NAME;
+                                        break;
+
+                                        case '@CALLINGNAME':    
+                                            $replacement = $member_data->PREF_NAME;
+                                        break;
+                                    }
+
+                                    $current_temp_content = str_replace ($keyword, $replacement, $current_temp_content);
                                 }
-                                @font-face {
-                                    font-family: 'freeserif';
-                                    font-style: normal;
-                                    font-weight: normal;
-                                    src: url('$font_path_freeserif') format('truetype');
-                                }
-                                body { font-family: DejaVu Sans, sans-serif, 'iskpota'; }*/
-                            </style>
-                            </head>
-                            <body>".$this_temp_content."</body>
-                            </html>";
+
+                                $all_pages .= ($i > 0) ? '<tcpdf method="AddPage" />' : '';
+                                $all_pages .= $current_temp_content;
+
+                                $i++;
+                            }
                         } else {
                             $debug = "\nNo template found for ".$this_lang_name;
                             $message = "<br>No template found for ".$this_lang_name;
@@ -518,14 +541,24 @@ class PostController extends Controller
             $message = "No template selected";
         }
 
-        if (count($data) > 0){
-            //new PDFTC(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            //PDFTC::setFontSubsetting(true);
-            PDFTC::SetFont('freeserif', '', 14);
-            PDFTC::AddPage();
-            PDFTC::writeHTML($data[0], true, 0, true, true);
+        if (!empty($all_pages)) {
+            $output = "<!doctype html>
+                            <html>
+                            <head>
+                            <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+                            </head>
+                            <body>".$all_pages."</body>
+                            </html>";
 
-            PDFTC::Output('print.pdf');
+            //new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+            PDF::setAutoPageBreak(true);
+            PDF::setFontSubsetting(false);
+            PDF::SetFont('freeserif', '', 14);
+            PDF::AddPage();
+            PDF::writeHTML($output, true, 0, true, true);
+
+            PDF::Output('print.pdf');
         } else {
             $result_array['data'] = $data;
             $result_array['result'] = $result;
