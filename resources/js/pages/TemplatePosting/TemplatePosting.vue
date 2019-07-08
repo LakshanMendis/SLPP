@@ -246,43 +246,169 @@
             </tab-content>
 
             <tab-content title="Message">
-              <b-row>
-                <b-col md="6">
-                  <b-form-group id="gr-select-template" label="Select Template:" label-for="select-template">
-                    <b-form-select
-                      class="mb-2"
-                      id="select-template"
-                      name="select-template"
-                      v-model="selected_template"
-                    >
-                      <option value="0" selected disabled>Select Template</option>
-                      <option
-                        v-for="data in templates"
-                        :value="data.id"
-                        :key="data.id"
-                      >{{ data.name + "/" + data.template_date + "/" + data.target }}</option>
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
+              <div>
+                <h5>Base Template</h5><hr />
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group id="gr-select-base-template" label="Select Template:" label-for="select-base-template">
+                      <b-form-select
+                        class="mb-2"
+                        id="select-base-template"
+                        name="select-base-template"
+                        v-model="template_selection.base_template"
+                      >
+                        <option value="0" selected disabled>Select Template</option>
+                        <option
+                          v-for="data in templates"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.name + "/" + data.template_date + "/" + data.target }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
 
-                <b-col md="6">
-                  <b-form-group id="gr-language" label="Language Option:" label-for="language">
-                    <b-form-select
-                      class="mb-1"
-                      id="language"
-                      name="language"
-                      v-model="selected_language"
-                    >
-                      <option value="0" selected>Automatic</option>
-                      <option
-                        v-for="data in languages"
-                        :value="data.id"
-                        :key="data.id"
-                      >{{ data.language + " - " + data.caption }}</option>
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
-              </b-row>
+                  <b-col md="6">
+                    <b-form-group id="gr-base-language" label="Language Option:" label-for="base-language">
+                      <b-form-select
+                        class="mb-1"
+                        id="base-language"
+                        name="base-language"
+                        v-model="template_selection.base_language"
+                      >
+                        <option value="0" selected>Automatic</option>
+                        <option
+                          v-for="data in languages"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.language + " - " + data.caption }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </div>
+
+              <div class="mt-3" v-if="!sms_option_disabled">
+                <h5>SMS Template</h5><hr />
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group id="gr-select-sms-template" label="Select Template:" label-for="select-sms-template">
+                      <b-form-select
+                        class="mb-2"
+                        id="select-sms-template"
+                        name="select-sms-template"
+                        v-model="template_selection.sms_template"
+                      >
+                        <option value="0" selected disabled>Select Template</option>
+                        <option
+                          v-for="data in templates"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.name + "/" + data.template_date + "/" + data.target }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="gr-sms-language" label="Language Option:" label-for="sms-language">
+                      <b-form-select
+                        class="mb-1"
+                        id="sms-language"
+                        name="sms-language"
+                        v-model="template_selection.sms_language"
+                      >
+                        <option value="0" selected>Automatic</option>
+                        <option
+                          v-for="data in languages"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.language + " - " + data.caption }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </div>
+
+              <div class="mt-3" v-if="!email_option_disabled">
+                <h5>E-Mail Template</h5><hr />
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group id="gr-select-email-template" label="Select Template:" label-for="select-email-template">
+                      <b-form-select
+                        class="mb-2"
+                        id="select-email-template"
+                        name="select-email-template"
+                        v-model="template_selection.email_template"
+                      >
+                        <option value="0" selected disabled>Select Template</option>
+                        <option
+                          v-for="data in templates"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.name + "/" + data.template_date + "/" + data.target }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="gr-email-language" label="Language Option:" label-for="email-language">
+                      <b-form-select
+                        class="mb-1"
+                        id="email-language"
+                        name="email-language"
+                        v-model="template_selection.email_language"
+                      >
+                        <option value="0" selected>Automatic</option>
+                        <option
+                          v-for="data in languages"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.language + " - " + data.caption }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </div>
+
+              <div class="mt-3" v-if="!print_option_disabled">
+                <h5>Printed Template</h5><hr />
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group id="gr-select-print-template" label="Select Template:" label-for="select-print-template">
+                      <b-form-select
+                        class="mb-2"
+                        id="select-print-template"
+                        name="select-print-template"
+                        v-model="template_selection.print_template"
+                      >
+                        <option value="0" selected disabled>Select Template</option>
+                        <option
+                          v-for="data in templates"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.name + "/" + data.template_date + "/" + data.target }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="gr-print-language" label="Language Option:" label-for="print-language">
+                      <b-form-select
+                        class="mb-1"
+                        id="print-language"
+                        name="print-language"
+                        v-model="template_selection.print_language"
+                      >
+                        <option value="0" selected>Automatic</option>
+                        <option
+                          v-for="data in languages"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.language + " - " + data.caption }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </div>
             </tab-content>
 
             <tab-content title="Send">
@@ -413,8 +539,16 @@ export default {
         load_members: [],
         loading: false
       },
-      selected_template: 0,
-      selected_language: 0,
+      template_selection: {
+        base_template: 0,
+        base_language: 0,
+        sms_template: 0,
+        sms_language: 0,
+        email_template: 0,
+        email_language: 0,
+        print_template: 0,
+        print_language: 0,
+      },
       summary: {
         filtered_member_count: 0,
         template_badge: "",
@@ -528,7 +662,6 @@ export default {
     reset_this(){
       this.search.select_member = "";
       this.get_category_values();
-      this.get_member_count ();
 
       this.districts = [],
       this.electorates = [],
@@ -542,6 +675,8 @@ export default {
       this.form_electoral.select_local_auth = 1;
       this.form_electoral.select_ward = 1;
       this.form_electoral.select_gn = 1;
+
+      this.get_member_count ();
     },
     type_changed(){
       if (this.target_type == 'multiple') {
@@ -589,24 +724,20 @@ export default {
     },
     finished () {
       let para = {};
-      let message_options = {
-        template_id: this.selected_template,
-        language_id: this.selected_language
-      };
       let category_values = {
         categories: this.category_values
-      }
+      };
 
       if (this.target_type == "multiple") {
         para = $.extend(para, this.form_electoral);
         para = $.extend(para, category_values);
-        para = $.extend(para, message_options);
+        para = $.extend(para, this.template_selection);
       }else{
         para = {
           member_id: this.search.select_member.id
         }
 
-        para = $.extend(para, message_options);
+        para = $.extend(para, this.template_selection);
       }
 
       this.selected_media.forEach(el => {
@@ -618,8 +749,22 @@ export default {
           break;
           
           case 'PRINT':
-            window.axios.get('/api/posts/print', { params: para }).then(({ data }) => {
-              console.log(data);
+            window.axios({
+              url: '/api/posts/print',
+              method: 'post',
+              data: para,
+              headers: {'X-CSRF-TOKEN': token.csrf},
+              responseType: 'blob'
+            }).then(({ data }) => {
+              const blob = new Blob([data]);
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = 'print.pdf';
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+              window.URL.revokeObjectURL(url);
             });
           break;
 

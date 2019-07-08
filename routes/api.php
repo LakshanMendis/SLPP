@@ -90,7 +90,7 @@ Route::resource('/locations', 'LocationController', [
 ]);
 
 Route::get('/posts/sms', 'PostController@sms');
-Route::get('/posts/print', 'PostController@print');
+Route::post('/posts/print', 'PostController@print');
 Route::get('/posts/email', 'PostController@email');
 
 Route::resource('/category_headers', 'CategoryHeaderController', [

@@ -78,14 +78,49 @@ class MemberController extends Controller
             }
         }
 
-        $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
-        $where .= " MEM.province_id = ".$province." AND ";
-        $where .= " MEM.district_id = ".$district." AND ";
-        $where .= " MEM.electorate_id = ".$electorate." AND ";
-        $where .= " MEM.local_auth_id = ".$local_auth." AND ";
-        $where .= " MEM.ward_id = ".$ward." AND ";
-        $where .= " MEM.gn_id = ".$gn_div." ";
-        $where .= " ) ";
+        $append_where = "";
+
+        // Generate where clause by checking electoral filters
+        if ($province > 1 || $district > 1 || $electorate > 1 || $local_auth > 1 || $ward > 1 || $gn_div > 1) {
+            if ($province > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.province_id = $province ";
+            }
+
+            if ($district > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.district_id = $district ";
+            }
+
+            if ($electorate > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.electorate_id = $electorate ";
+            }
+
+            if ($local_auth > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.local_auth_id = $local_auth ";
+            }
+
+            if ($ward > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.ward_id = $ward ";
+            }
+
+            if ($gn_div > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.gn_id = $gn_div ";
+            }
+        }
+
+        if (!empty($append_where)){
+            $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+            $where .= $append_where;
+            $where .= " ) ";
+        }
+
+        $where .= (empty($where)) ? " WHERE " : " AND ";
+        $where .= " MEM.status = 1 ";
 
         $query = " SELECT
         COUNT(MEM.id) AS C
