@@ -1,0 +1,8 @@
+.document-viewer {
+    border: 1px solid #000;
+    background: #fff;
+
+    /* This element is a flex container for easier rendering. */
+    display: flex;
+    flex-flow: column nowrap;
+}

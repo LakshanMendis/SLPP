@@ -152,7 +152,7 @@ class TemplateController extends Controller
      */
     public function show(template $template)
     {
-        //
+        return ($template);
     }
 
     /**

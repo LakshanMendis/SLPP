@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\categoryDetail;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoryDetailController extends Controller
 {
@@ -22,9 +23,19 @@ class CategoryDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $category_detail = new categoryDetail();
+
+        $category_detail->category_id = $request->input('header_id');
+
+        $category_detail->option = $request->input('option');
+        $category_detail->status = $request->input('status');
+        $category_detail->created_by = 0;
+
+        $category_detail->save();
+
+        return response($category_detail->jsonSerialize(), Response::HTTP_CREATED);
     }
 
     /**

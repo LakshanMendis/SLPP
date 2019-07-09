@@ -58,9 +58,9 @@
               index="member"
               :childrenLinks="[
           { header: 'Add New', link: '/app/member/new' },
-          { header: 'Update/Inactive', link: '/app/member/update-inactive' },
-          { header: 'View', link: '/app/member/view' },
-          { header: 'Tagging', link: '/app/member/tagging' },
+          //{ header: 'Update/Inactive', link: '/app/member/update-inactive' },
+          //{ header: 'View', link: '/app/member/view' },
+          //{ header: 'Tagging', link: '/app/member/tagging' },
           { header: 'Categories', link: '/app/member/categories' },
         ]"
       />
@@ -75,6 +75,17 @@
           { header: 'View', link: '/app/templating/view' },
           { header: 'Update/Inactive', link: '/app/templating/update-inactive' },
           { header: 'Posting', link: '/app/templating/posting' },
+        ]"
+      />
+      <NavLink
+              :activeItem="activeItem"
+              header="Reports"
+              link="/app/reports"
+              iconName="flaticon-file"
+              index="reports"
+              :childrenLinks="[
+          { header: 'Member Reports', link: '/app/reports/member' },
+          { header: 'Posting Log', link: '/app/reports/posting' },
         ]"
       />
       <!--<NavLink

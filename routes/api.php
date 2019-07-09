@@ -96,3 +96,7 @@ Route::get('/posts/email', 'EmailController@email');
 Route::resource('/category_headers', 'CategoryHeaderController', [
     'except' => ['edit', 'show', 'store']
 ]);
+
+Route::resource('/category_details', 'CategoryDetailController', [
+    'except' => ['edit', 'show', 'store']
+]);

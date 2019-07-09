@@ -48,6 +48,10 @@ import TemplateNew from 'RESO/js/pages/TemplateNew/TemplateNew';
 import TemplateUpdate from 'RESO/js/pages/TemplateUpdate/TemplateUpdate';
 import TemplatePosting from 'RESO/js/pages/TemplatePosting/TemplatePosting';
 
+/* Report Pages */
+import MemberReport from 'RESO/js/pages/MemberReport/MemberReport';
+import PostingReport from 'RESO/js/pages/PostingReport/PostingReport';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -230,6 +234,16 @@ const routes = [
                 path: 'master/gndivisions',
                 name: 'GNDivisions',
                 component: GNDivisions,
+            },
+            {
+                path: 'reports/member',
+                name: 'MemberReport',
+                component: MemberReport,
+            },
+            {
+                path: 'reports/posting',
+                name: 'PostingReport',
+                component: PostingReport,
             },
         ],
     },
