@@ -727,11 +727,15 @@ export default {
       let category_values = {
         categories: this.category_values
       };
+      let mode_type = {
+        mode: this.target_type
+      };
 
       if (this.target_type == "multiple") {
         para = $.extend(para, this.form_electoral);
         para = $.extend(para, category_values);
         para = $.extend(para, this.template_selection);
+        para = $.extend(para, mode_type);
       }else{
         para = {
           member_id: this.search.select_member.id

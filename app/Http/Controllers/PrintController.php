@@ -49,6 +49,20 @@ class PrintController extends Controller
         $template = $request->input('print_template');
         $language = $request->input('print_language');
         $media = "PAPER-A4";
+        $mode = $request->input('mode');
+
+        $search_header_id = DB::table('slpp_post_search_headers')->insertGetId(
+            [
+                'mode' => $mode, 
+                'province_id' => $province, 
+                'district_id' => $district,
+                'electorate_id' => $electorate,
+                'local_auth_id' => $local_auth,
+                'ward_id' => $ward,
+                'gn_id' => $gn_div,
+                'created_by' => 0
+            ]
+        );
 
         $where = "";
         $result_array = array();
@@ -218,6 +232,17 @@ class PrintController extends Controller
                             $this_temp_id = $language_check_result[0]->ID;
                             $this_temp_content = $language_check_result[0]->CONTENT;
 
+                            $log_header_id = DB::table('slpp_post_log_headers')->insertGetId(
+                                [
+                                    'search_header_id' => $search_header_id, 
+                                    'template_id' => $this_temp_id, 
+                                    'media' => $media,
+                                    'language_id' => $this_lang_id,
+                                    'member_count' => 0,
+                                    'created_by' => 0
+                                ]
+                            );
+
                             // Generate where clause for this language
                             $lang_where .= (empty($where)) ? " WHERE " : " AND ";
                             $lang_where .= " MEM.pref_lang_id = $this_lang_id ";
@@ -268,6 +293,7 @@ class PrintController extends Controller
                             MEM.address_line1 AS ADDL1,
                             MEM.address_line2 AS ADDL2,
                             MEM.city AS CITY,
+                            MEM.pref_lang_id AS PREF_LANG_ID,
                             MEM.pref_lang_name AS PREF_NAME,
                             MEM.pref_lang_address_line1 AS PREF_ADDL1,
                             MEM.pref_lang_address_line2 AS PREF_ADDL2,
@@ -394,6 +420,19 @@ class PrintController extends Controller
 
                                 $all_pages .= ($i > 0) ? '<br pagebreak="true" />' : '';
                                 $all_pages .= $current_temp_content;
+
+                                $log_detail = DB::table('slpp_post_log_details')->insert(
+                                    [
+                                        'log_header_id' => $log_header_id, 
+                                        'member_id' => $member_data->ID, 
+                                        'preferred_lang_id' => $member_data->PREF_LANG_ID,
+                                        'used_template_id' => $this_temp_id,
+                                        'used_lang_id' => $this_lang_id,
+                                        'result' => 1,
+                                        'message' => '',
+                                        'created_by' => 0
+                                    ]
+                                );
 
                                 $i++;
                             }
