@@ -89,9 +89,9 @@ Route::resource('/locations', 'LocationController', [
     'except' => ['edit', 'store']
 ]);
 
-Route::get('/posts/sms', 'PostController@sms');
-Route::post('/posts/print', 'PostController@print');
-Route::get('/posts/email', 'PostController@email');
+Route::get('/posts/sms', 'SmsController@sms');
+Route::post('/posts/print', 'PrintController@print');
+Route::get('/posts/email', 'EmailController@email');
 
 Route::resource('/category_headers', 'CategoryHeaderController', [
     'except' => ['edit', 'show', 'store']
