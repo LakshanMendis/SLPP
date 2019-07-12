@@ -45,7 +45,7 @@
                   <b-col md="9">
                     <b-row>
                       <b-col md="6">
-                        <b-form-group id="group_membership_id" label="*Membership ID:" label-for="text_membership_id">
+                        <b-form-group id="group_membership_id" label="Membership ID:" label-for="text_membership_id">
                           <b-form-input
                             id="text_membership_id"
                             name="text_membership_id"

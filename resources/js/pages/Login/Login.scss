@@ -1,7 +1,7 @@
 @import '../../styles/app';
 
 .login-page {
-  padding-top: 20vh;
+  padding-top: 8vh;
   height: 100%;
 
   .widget {
@@ -47,6 +47,10 @@
       margin: 0 20px;
     }
   }
+}
+
+.validate-error{
+  border: #F00 1px groove solid;
 }
 
 .widget-bottom-overflow :global(.btn) {

@@ -100,3 +100,6 @@ Route::resource('/category_headers', 'CategoryHeaderController', [
 Route::resource('/category_details', 'CategoryDetailController', [
     'except' => ['edit', 'show', 'store']
 ]);
+
+Route::post('/authenticate/login', 'AuthenticationController@login');
+Route::resource('/authenticate', 'AuthenticationController');

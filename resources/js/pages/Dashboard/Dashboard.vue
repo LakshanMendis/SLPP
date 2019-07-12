@@ -76,32 +76,32 @@
           <h6>Quick Links</h6>
           <b-row class="pt-3 pb-3">
             <b-col lg="4" class="pb-2">
-              <b-dropdown block split type="dark" variant="maroon" right size="lg" class="w-100">
+              <b-dropdown @click="quickClicked('/app/member/view')" block split type="dark" variant="maroon" right size="lg" class="w-100">
                 <template slot="button-content">
                   <i class="fa fa-users"></i><br><strong>Members</strong>
                 </template>
-                <b-dropdown-item><i class="fa fa-search"></i> View</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/member/view')"><i class="fa fa-search"></i> View</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item><i class="fa fa-plus"></i> Add</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/member/new')"><i class="fa fa-plus"></i> Add</b-dropdown-item>
                 <b-dropdown-item><i class="fa fa-pencil"></i> Update</b-dropdown-item>
                 <b-dropdown-item><i class="fa fa-tags"></i> Tag</b-dropdown-item>
               </b-dropdown>
             </b-col>
 
             <b-col lg="4" class="pb-2">
-              <b-dropdown block split type="dark" variant="maroon" right size="lg" class="w-100">
+              <b-dropdown @click="quickClicked('/app/templating/view')" block split type="dark" variant="maroon" right size="lg" class="w-100">
                 <template slot="button-content">
                   <i class="fa fa-file"></i><br><strong>Templates</strong>
                 </template>
-                <b-dropdown-item><i class="fa fa-search"></i> View</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/templating/view')"><i class="fa fa-search"></i> View</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item><i class="fa fa-plus"></i> Create</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/templating/new')"><i class="fa fa-plus"></i> Create</b-dropdown-item>
                 <b-dropdown-item><i class="fa fa-pencil"></i> Update</b-dropdown-item>
               </b-dropdown>
             </b-col>
 
             <b-col lg="4" class="pb-2">
-              <b-button block type="dark" variant="maroon" size="lg">
+              <b-button @click="quickClicked('/app/templating/posting')" block type="dark" variant="maroon" size="lg">
                 <i class="fa fa-send"></i><br><strong>Send</strong>
               </b-button>
             </b-col>
@@ -377,6 +377,11 @@ export default {
     },
     getRandomInt () {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    },
+    quickClicked(action){
+      if (action == "" || action == null) return;
+
+      this.$router.push(action);
     }
   },
   computed: {
@@ -403,6 +408,11 @@ export default {
         })),
       ];
     },
+  },
+  created() {
+    if (window.localStorage.getItem('authenticated') !== 'true') {
+      this.$router.push('/app/login');
+    }
   }
 };
 </script>
