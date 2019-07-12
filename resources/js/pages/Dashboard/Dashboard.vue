@@ -411,7 +411,7 @@ export default {
   },
   created() {
     if (window.localStorage.getItem('authenticated') !== 'true') {
-      this.$router.push('/app/login');
+      this.$router.push('/login');
     }
   }
 };

@@ -118,6 +118,38 @@
                           </b-form-select>
                         </b-form-group>
                       </b-col>
+
+                      <b-col md="6">
+                      <b-form-group label=" ">
+                      <b-form-checkbox-group
+                        switches
+                        stacked
+                        id="media_group"
+                        name="media_group"
+                        v-model="selected_media"
+                        :options="media_options"
+                        @input="media_changed"
+                      ></b-form-checkbox-group>
+                    </b-form-group>
+
+                    
+                    <b-form-group id="group_sms">
+                      <b-form-select
+                        class="mb-1 mt-1"
+                        id="sms_option"
+                        name="sms_option"
+                        :disabled="sms_option_disabled"
+                        v-model="selected_sms_sender"
+                      >
+                        <option :value="[]" disabled>Select Openable</option>
+                        <option
+                          v-for="data in sms_senders"
+                          :value="data"
+                          :key="data.id"
+                        >{{ data.name + " [" + data.sender_id + "]" }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                    </b-col>
                       
                       
                       <b-col md="3">
@@ -144,6 +176,8 @@
                       </b-form-checkbox>
                       </b-col>
 
+                      
+
         </b-row>
         </b-form>
         <div class="mt-4 clearfix">
@@ -162,14 +196,128 @@
 
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
+import Category from 'RESO/js/components/Category/Category';
+import Multiselect from 'vue-multiselect';
+import {FormWizard, TabContent} from 'vue-form-wizard';
+import 'vue-form-wizard/dist/vue-form-wizard.min.css';
 
 export default {
-  name: 'Modules',
-  components: { Widget },
+  name: 'AnotherPage',
+  components: { 
+    Widget,
+    Category,
+    Multiselect,
+    FormWizard,
+    TabContent
+  },
   data() {
     return {
-      message: 'Test message'
+      selected_media: [],
+      media_options: [
+        { text: 'Openable', value: 'SMS' },
+        // { text: 'E-mail', value: 'EMAIL' },
+        // { text: 'Printed', value: 'PRINT' },
+      ],
+      sms_option_disabled: true,
+      selected_sms_sender: [],
+      
+      sms_senders: [],
+     
+      search: {
+        select_member: '',
+        load_members: [],
+        loading: false
+      },
+      
     }
+  },
+  methods: {
+    media_changed () {
+      const has_sms = this.selected_media.includes("SMS");
+      
+      this.sms_option_disabled = !has_sms;
+      
+    },
+    all_sms_senders() {
+      window.axios.get('/api/sms_senders').then(({ data }) => {
+        this.sms_senders = data;
+      });
+    },
+    
+   
+    
+    
+    
+    
+    
+    finished () {
+      let para = {};
+      let category_values = {
+        categories: this.category_values
+      };
+      let mode_type = {
+        mode: this.target_type
+      };
+
+      if (this.target_type == "multiple") {
+        para = $.extend(para, this.form_electoral);
+        para = $.extend(para, category_values);
+        para = $.extend(para, this.template_selection);
+        para = $.extend(para, mode_type);
+      }else{
+        para = {
+          member_id: this.search.select_member.id
+        }
+
+        para = $.extend(para, this.template_selection);
+      }
+
+      this.selected_media.forEach(el => {
+        switch (el) {
+          case 'SMS':
+            window.axios.get('/api/posts/sms', { params: para }).then(({ data }) => {
+              console.log(data);
+            });
+          break;
+          
+          case 'PRINT':
+            window.axios({
+              url: '/api/posts/print',
+              method: 'post',
+              data: para,
+              headers: {'X-CSRF-TOKEN': token.csrf},
+              responseType: 'blob'
+            }).then(({ data }) => {
+              const blob = new Blob([data]);
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = 'print.pdf';
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+              window.URL.revokeObjectURL(url);
+            });
+          break;
+
+          case 'EMAIL':
+            window.axios.get('/api/posts/email', { params: para }).then(({ data }) => {
+              console.log(data);
+            });
+          break;
+        }
+      });
+    }
+  },
+  created() {
+    this.all_languages();
+    this.all_sms_senders();
+    this.all_email_senders();
+    this.all_locations();
+    this.all_provinces();
+    this.get_category_values();
+    this.all_active_templates();
+    this.get_member_count ();
   }
 };
 </script>
