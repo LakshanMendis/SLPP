@@ -118,7 +118,7 @@ export default {
 
             this.$router.push('/app/dashboard');
           } else {
-            this.errorMessage = "Username or password is invalid!"
+            this.errorMessage = "Username or password is invalid!";
           }
         });
       }
