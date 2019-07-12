@@ -83,8 +83,8 @@
                 <b-dropdown-item @click="quickClicked('/app/member/view')"><i class="fa fa-search"></i> View</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
                 <b-dropdown-item @click="quickClicked('/app/member/new')"><i class="fa fa-plus"></i> Add</b-dropdown-item>
-                <b-dropdown-item><i class="fa fa-pencil"></i> Update</b-dropdown-item>
-                <b-dropdown-item><i class="fa fa-tags"></i> Tag</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/member/update-inactive')"><i class="fa fa-pencil"></i> Update</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/member/tagging')"><i class="fa fa-tags"></i> Tag</b-dropdown-item>
               </b-dropdown>
             </b-col>
 
@@ -96,7 +96,7 @@
                 <b-dropdown-item @click="quickClicked('/app/templating/view')"><i class="fa fa-search"></i> View</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
                 <b-dropdown-item @click="quickClicked('/app/templating/new')"><i class="fa fa-plus"></i> Create</b-dropdown-item>
-                <b-dropdown-item><i class="fa fa-pencil"></i> Update</b-dropdown-item>
+                <b-dropdown-item @click="quickClicked('/app/templating/update-inactive')"><i class="fa fa-pencil"></i> Update</b-dropdown-item>
               </b-dropdown>
             </b-col>
 
@@ -127,7 +127,7 @@
                 </template>
                 <b-dropdown-item><i class="fa fa-search"></i> View</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item><i class="fa fa-power-off"></i> Sign out</b-dropdown-item>
+                <b-dropdown-item @click="logout"><i class="fa fa-power-off"></i> Sign out</b-dropdown-item>
               </b-dropdown>
             </b-col>
           </b-row>
@@ -382,6 +382,10 @@ export default {
       if (action == "" || action == null) return;
 
       this.$router.push(action);
+    },
+    logout() {
+      window.localStorage.setItem('authenticated', false);
+      this.$router.push('/login');
     }
   },
   computed: {
