@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <b-container>
-      <Widget class="mx-auto" title="<h3 class='mt-0 fw-normal text-center'>Login to Member Portal</h3>" customHeader>
+      <Widget class="mx-auto" title="<h3 class='mt-0 fw-normal text-center'>Login to <em>e</em>-SLPP</h3>" customHeader>
         <b-row>
           <b-col md="12" class="mt-1">
             <img src="images/SLPP_LOGO.jpg" />

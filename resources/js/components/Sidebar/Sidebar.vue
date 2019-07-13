@@ -4,7 +4,9 @@
     :class="{sidebar: true}"
   >
     <header class="logo">
-      <router-link to="/app/dashboard">Members <span class="fw-semi-bold">Portal</span></router-link>
+      <router-link to="/app/dashboard">
+        <em>e</em>-<span class="fw-semi-bold">SLPP</span>
+      </router-link>
     </header>
 
     <ul class="nav">

@@ -271,6 +271,11 @@ class MemberController extends Controller
         $memberUpdate->country_id = (isset($request->select_country_id)) ? $request->select_country_id : 202;
         $memberUpdate->dialing_code = (isset($request->select_dialing_code)) ? $request->select_dialing_code : '+94';
 
+        $memberUpdate->overseas_address_line1 = $request->text_oversea_address_line1;
+        $memberUpdate->overseas_address_line2 = $request->text_oversea_address_line2;
+        $memberUpdate->overseas_city = $request->text_oversea_city;
+        $memberUpdate->overseas_postal_code = $request->text_oversea_postalcode;
+
         $memberUpdate->pref_lang_id = $pref_lang_id;
         $memberUpdate->pref_lang_name = $pref_lang_name;
         $memberUpdate->pref_lang_address_line1 = $pref_lang_address_line1;

@@ -514,7 +514,69 @@
                           </b-input-group>
                         </b-form-group>
                       </b-col>
+
+                      <b-col md="6" class="pt-4" v-if="form_communication.check_live_abroad">
+                        <b-alert variant="maroon" class="help-alert animated bounceIn" dismissible v-model="form_communication.show_overseas_alert">
+                          <i class="fa fa-info-circle mr-1"></i> Enter <strong>oversea residential address</strong> in following fields! (Optional)
+                        </b-alert>
+                      </b-col>
                     </b-row>
+
+                    <div id="oversea_address_options" v-if="form_communication.check_live_abroad">
+                      <b-row>
+                        <b-col md="12" class="mt-2 mb-2">
+                          <h4>Fill Overseas Residential Details</h4>
+                        </b-col>
+                      </b-row>
+
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group id="group_oversea_address_line1" label="Address Line 1:" label-for="text_oversea_address_line1">
+                            <b-form-input
+                              id="text_oversea_address_line1"
+                              name="text_oversea_address_line1"
+                              v-model="form_communication.text_oversea_address_line1"
+                              placeholder="Address Line 1"
+                            ></b-form-input>
+                          </b-form-group>
+                        </b-col>
+
+                        <b-col md="6">
+                          <b-form-group id="group_oversea_address_line2" label="Address Line 2:" label-for="text_oversea_address_line2">
+                            <b-form-input
+                              id="text_oversea_address_line2"
+                              name="text_oversea_address_line2"
+                              v-model="form_communication.text_oversea_address_line2"
+                              placeholder="Address Line 2"
+                            ></b-form-input>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+
+                      <b-row>
+                        <b-col md="6">
+                          <b-form-group id="group_oversea_city" label="City:" label-for="text_oversea_city">
+                            <b-form-input
+                              id="text_oversea_city"
+                              name="text_oversea_city"
+                              v-model="form_communication.text_oversea_city"
+                              placeholder="City"
+                            ></b-form-input>
+                          </b-form-group>
+                        </b-col>
+
+                        <b-col md="6">
+                          <b-form-group id="group_oversea_postalcode" label="Postal Code:" label-for="text_oversea_postalcode">
+                            <b-form-input
+                              id="text_oversea_postalcode"
+                              name="text_oversea_postalcode"
+                              v-model="form_communication.text_oversea_postalcode"
+                              placeholder="Postal Code"
+                            ></b-form-input>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                    </div>
                   </b-col>
                 </b-row>
 
@@ -746,7 +808,12 @@ export default {
         text_email: '',
         select_dialing_code: '+94',
         check_live_abroad: false,
-        select_country_id: 202
+        select_country_id: 202,
+        show_overseas_alert: true,
+        text_oversea_address_line1: '',
+        text_oversea_address_line2: '',
+        text_oversea_city: '',
+        text_oversea_postalcode: '',
       },
       form_language: {
         id: this.global_member_id,
@@ -922,6 +989,10 @@ export default {
       this.form_communication.select_dialing_code = '+94';
       this.form_communication.check_live_abroad = false;
       this.form_communication.select_country_id = 202;
+      this.form_communication.text_oversea_address_line1 = "";
+      this.form_communication.text_oversea_address_line2 = "";
+      this.form_communication.text_oversea_city = "";
+      this.form_communication.text_oversea_postalcode = "";
 
       this.category_values = this.category_init_values;
 
@@ -1076,6 +1147,10 @@ export default {
       this.form_communication.select_dialing_code = this.search.select_member.dialing_code;
       this.form_communication.check_live_abroad = (this.search.select_member.living_abroad == 1) ? true : false;
       this.form_communication.select_country_id = this.search.select_member.country_id;
+      this.form_communication.text_oversea_address_line1 = this.search.select_member.overseas_address_line1;
+      this.form_communication.text_oversea_address_line2 = this.search.select_member.overseas_address_line2;
+      this.form_communication.text_oversea_city = this.search.select_member.overseas_city;
+      this.form_communication.text_oversea_postalcode = this.search.select_member.overseas_postal_code;
 
       this.get_category_values();
 
