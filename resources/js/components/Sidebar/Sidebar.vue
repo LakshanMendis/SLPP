@@ -18,7 +18,7 @@
               index="dashboard"
               isHeader
       />
-      <NavLink
+      <!--<NavLink
               :activeItem="activeItem"
               header="Administrator"
               link="/app/admin"
@@ -51,7 +51,7 @@
           { header: 'Wards', link: '/app/master/wards' },
           { header: 'GN Divisions', link: '/app/master/gndivisions' },
         ]"
-      />
+      />-->
       <NavLink
               :activeItem="activeItem"
               header="Member"
@@ -75,11 +75,11 @@
               :childrenLinks="[
           { header: 'Create New', link: '/app/templating/new' },
           { header: 'View', link: '/app/templating/view' },
-          { header: 'Update/Inactive', link: '/app/templating/update-inactive' },
+          //{ header: 'Update/Inactive', link: '/app/templating/update-inactive' },
           { header: 'Posting', link: '/app/templating/posting' },
         ]"
       />
-      <NavLink
+      <!--<NavLink
               :activeItem="activeItem"
               header="Reports"
               link="/app/reports"
@@ -89,7 +89,7 @@
           { header: 'Member Reports', link: '/app/reports/member' },
           { header: 'Posting Log', link: '/app/reports/posting' },
         ]"
-      />
+      />-->
       <!--<NavLink
               :activeItem="activeItem"
               header="Guides"

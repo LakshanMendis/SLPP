@@ -29,22 +29,31 @@ class AuthenticationController extends Controller
         $message = "";
 
         try {
-            $access = access::select(
-                'id as access_id',
-                'user_id',
-                'overrided_company as company_id',
-                'overrided_location as location_id',
-                'overrided_department as department_id',
-                'overrided_designation as designation_id',
-                'status'
-            )
+            $access_count = access::select()
             ->where('username', '=', $username)
             ->where('password', '=', $enc_password)
             ->where('status', '=', 1)
-            ->first();
+            ->count();
 
-            $data = $access;
-            $result = (count($access) > 0) ? true : false;
+            if ($access_count > 0) {
+                $access = access::select(
+                    'id as access_id',
+                    'user_id',
+                    'overrided_company as company_id',
+                    'overrided_location as location_id',
+                    'overrided_department as department_id',
+                    'overrided_designation as designation_id',
+                    'status'
+                )
+                ->where('username', '=', $username)
+                ->where('password', '=', $enc_password)
+                ->where('status', '=', 1)
+                ->first();
+    
+                $data = $access;
+
+                $result = true;
+            }
         } catch (Throwable $th) {
             $debug = "";
             $message = "";
