@@ -256,4 +256,12 @@ const routes = [
 
 const router = new VueRouter({ mode: 'history', routes: routes });
 
+router.beforeEach((to, from, next) => {
+    const access_id = window.localStorage.getItem('access_id');
+
+    console.log('Checking permission to access '+to+' from '+from+' for access id: '+access_id);
+
+    next();
+});
+
 export default router;

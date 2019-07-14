@@ -151,233 +151,19 @@
         </Widget>
       </b-col>
     </b-row>
-    
-    <!-- <b-row>
-      <b-col lg="4" xs="12">
-        <Widget
-          title="<h6><span class='badge badge-danger'>New</span> Messages</h6>"
-          refresh close customHeader
-        >
-          <div class="widget-body p-0">
-            <div class="list-group list-group-lg">
-              <a class="list-group-item" href="#">
-                <span class="thumb-sm float-left mr">
-                  <img class="rounded-circle" src="../../assets/people/a2.jpg" alt="..." />
-                  <i class="status status-bottom bg-success" />
-                </span>
-                <div>
-                  <h6 class="m-0">Chris Gray</h6>
-                  <p class="help-block text-ellipsis m-0">
-                    Hey! What&apos;s up? So many times since we
-                  </p>
-                </div>
-              </a>
-              <a class="list-group-item" href="#">
-                <span class="thumb-sm float-left mr">
-                  <img class="rounded-circle" src="../../assets/people/a4.jpg" alt="..." />
-                  <i class="status status-bottom bg-success" />
-                </span>
-                <div>
-                  <h6 class="m-0">Jamey Brownlow</h6>
-                  <p class="help-block text-ellipsis m-0">
-                    Good news coming tonight. Seems they agreed to proceed
-                  </p>
-                </div>
-              </a>
-              <a class="list-group-item" href="#">
-                <span class="thumb-sm float-left mr">
-                  <img class="rounded-circle" src="../../assets/people/a1.jpg" alt="..." />
-                  <i class="status status-bottom bg-warning" />
-                </span>
-                <div>
-                  <h6 class="m-0">Livia Walsh</h6>
-                  <p class="help-block text-ellipsis m-0">Check my latest email plz!</p>
-                </div>
-              </a>
-              <a class="list-group-item" href="#">
-                <span class="thumb-sm float-left mr">
-                  <img class="rounded-circle" src="../../assets/people/a5.jpg" alt="..." />
-                  <i class="status status-bottom bg-danger" />
-                </span>
-                <div>
-                  <h6 class="m-0">Jaron Fitzroy</h6>
-                  <p class="help-block text-ellipsis m-0">What about summer break?</p>
-                </div>
-              </a>
-            </div>
-          </div>
-          <footer class="bg-widget mt">
-            <input type="search" class="form-control form-control-sm" placeholder="Search" />
-          </footer>
-        </Widget>
-      </b-col>
-      <b-col lg="4" xs="12">
-        <Widget
-          title="<h6> Market <span class='fw-semi-bold'>Stats</span></h6>"
-          close customHeader
-        >
-          <div class="widget-body">
-            <h3>$720 Earned</h3>
-            <p class="fs-mini text-muted mb mt-sm">
-              Target <span class="fw-semi-bold">$820</span> day earnings
-              is <span class="fw-semi-bold">96%</span> reached.
-            </p>
-          </div>
-          <div class="widget-bottom-overflow">
-            <table class="table table-striped table-sm">
-              <thead class="no-bd">
-                <tr>
-                  <th>
-                    <div class="checkbox abc-checkbox">
-                      <input
-                        type="checkbox"
-                        class="mt-0"
-                        id="checkbox210"
-                        @click="checkTable(0)"
-                        :checked="checkedArr[0]"
-                      />
-                      <label for="checkbox210" />
-                    </div>
-                  </th>
-                  <th>&nbsp;</th>
-                  <th>&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="checkbox abc-checkbox">
-                      <input
-                        type="checkbox"
-                        class="mt-0"
-                        id="checkbox212"
-                        @click="checkTable(1)"
-                        :checked="checkedArr[1]"
-                      />
-                      <label for="checkbox212" />
-                    </div>
-                  </td>
-                  <td>HP Core i7</td>
-                  <td class="text-align-right fw-semi-bold">$346.1</td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="checkbox abc-checkbox">
-                      <input
-                        type="checkbox"
-                        class="mt-0"
-                        id="checkbox214"
-                        @click="checkTable(2)"
-                        :checked="checkedArr[2]"
-                      />
-                      <label for="checkbox214" />
-                    </div>
-                  </td>
-                  <td>Air Pro</td>
-                  <td class="text-align-right fw-semi-bold">$533.1</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="widget-body mt-xlg chart-overflow-bottom">
-            <area-chart class="area-chart" height="100px" :options="{legend: false, scales: {yAxes: [{display: false}], xAxes: [{display: false}]}}"  :chart-data="dataCollection"></area-chart>
-          </div>
-        </Widget>
-      </b-col>
-    </b-row> -->
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import Widget from 'RESO/js/components/Widget/Widget';
-import AnimatedNumber from "animated-number-vue";
-import AreaChart from './components/AreaChart/AreaChart';
-
-const todos = [
-  {
-    description: 'Take Sebastian to basketball practice.',
-    isComplete: false,
-    dates: { weekdays: 6, weeklyInterval: 2 }, // Every other Friday
-    color: '#ff8080',       // Red
-  },
-  {
-    description: 'German courses',
-    isComplete: false,
-    dates: new Date(),
-    color: '#64a4ff',       // Red
-  },
-  {
-    description: 'Constitution Day',
-    isComplete: false,
-    dates: new Date(Date.now() + 6*24*60*60*1000), // in 6 days
-    color: '#6ae696',       // Red
-  },
-];
 
 export default {
   name: 'Dashboard',
   components: {
     Widget,
-    AnimatedNumber,
-    AreaChart
-  },
-  data() {
-    return {
-      checkedArr: [false, false, false],
-      dataCollection: null,
-      todos
-    };
-  },
-  mounted () {
-    this.fillData();
   },
   methods: {
-    checkTable(id) {
-      let arr = [];
-      if (id === 0) {
-        const val = !this.checkedArr[0];
-        for (let i = 0; i < this.checkedArr.length; i += 1) {
-          arr[i] = val;
-        }
-      } else {
-        arr = this.checkedArr;
-        arr[id] = !arr[id];
-      }
-      if (arr[0]) {
-        let count = 1;
-        for (let i = 1; i < arr.length; i += 1) {
-          if (arr[i]) {
-            count += 1;
-          }
-        }
-        if (count !== arr.length) {
-          arr[0] = !arr[0];
-        }
-      }
-      Vue.set(this, 'checkedArr', arr);
-    },
-    fillData () {
-      this.dataCollection = {
-        labels: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            borderColor: 'transparent',
-            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
-          }, {
-            label: 'Data Two',
-            backgroundColor: '#7c87f8',
-            borderColor: 'transparent',
-            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
-          }
-        ]
-      }
-    },
-    getRandomInt () {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
-    },
     quickClicked(action){
       if (action == "" || action == null) return;
 
@@ -385,6 +171,9 @@ export default {
     },
     logout() {
       window.localStorage.setItem('authenticated', false);
+      window.localStorage.setItem('access_id', 0);
+      window.localStorage.setItem('user_id', 0);
+
       this.$router.push('/login');
     }
   },
@@ -399,17 +188,6 @@ export default {
           },
           dates: new Date(),
         },
-        // Attributes for todos
-        ...this.todos.map(todo => ({
-          dates: todo.dates,
-          dot: {
-            backgroundColor: todo.color,
-            opacity: todo.isComplete ? 0.3 : 1,
-          },
-          popover: {
-            label: todo.description,
-          },
-        })),
       ];
     },
   },

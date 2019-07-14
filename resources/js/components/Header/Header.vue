@@ -68,6 +68,9 @@ export default {
     },
     logout() {
       window.localStorage.setItem('authenticated', false);
+      window.localStorage.setItem('access_id', 0);
+      window.localStorage.setItem('user_id', 0);
+
       this.$router.push('/login');
     },
   },
