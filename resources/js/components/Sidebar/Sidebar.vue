@@ -8,104 +8,26 @@
         <em>e</em>-<span class="fw-semi-bold">SLPP</span>
       </router-link>
     </header>
+    
+    <div v-if="isMenuLoading" class="text-center loading">
+      <b-alert variant="maroon" show>
+        <h5 class="mt-2 mb-3">Loading Menu..</h5>
+        <b-spinner class="mt-2 mb-4" variant="danger" type="grow" label="Loading Menu"></b-spinner>
+      </b-alert>
+    </div>
 
     <ul class="nav">
       <NavLink
-              :activeItem="activeItem"
-              header="Dashboard"
-              link="/app/dashboard"
-              iconName="flaticon-home"
-              index="dashboard"
-              isHeader
+        v-for="item in navLinks"
+        :key="item.key"
+        :activeItem="activeItem"
+        :header="item.header"
+        :link="item.link"
+        :iconName="item.iconName"
+        :index="item.index"
+        :isHeader="item.isHeader"
+        :childrenLinks="item.childrenLinks"
       />
-      <!--<NavLink
-              :activeItem="activeItem"
-              header="Administrator"
-              link="/app/admin"
-              iconName="flaticon-share"
-              index="admin"
-              :childrenLinks="[
-          { header: 'Users', link: '/app/admin/users' },
-          { header: 'Modules', link: '/app/admin/modules' },
-          { header: 'Permissions', link: '/app/admin/permissions' },
-          { header: 'Companies', link: '/app/admin/companies' },
-          { header: 'Locations', link: '/app/admin/locations' },
-          { header: 'Departments', link: '/app/admin/departments' },
-          { header: 'Designations', link: '/app/admin/designations' },
-        ]"
-      />
-      <NavLink
-              :activeItem="activeItem"
-              header="Master"
-              link="/app/master"
-              iconName="flaticon-link"
-              index="master"
-              :childrenLinks="[
-          { header: 'Titles', link: '/app/master/titles' },
-          { header: 'Nationality', link: '/app/master/nationality' },
-          { header: 'Religions', link: '/app/master/religions' },
-          { header: 'Provinces', link: '/app/master/provinces' },
-          { header: 'Districts', link: '/app/master/districts' },
-          { header: 'Electorates', link: '/app/master/electorates' },
-          { header: 'Local Authorities', link: '/app/master/localauthorities' },
-          { header: 'Wards', link: '/app/master/wards' },
-          { header: 'GN Divisions', link: '/app/master/gndivisions' },
-        ]"
-      />-->
-      <NavLink
-              :activeItem="activeItem"
-              header="Member"
-              link="/app/member"
-              iconName="flaticon-user"
-              index="member"
-              :childrenLinks="[
-          { header: 'Add New', link: '/app/member/new' },
-          //{ header: 'Update/Inactive', link: '/app/member/update-inactive' },
-          //{ header: 'View', link: '/app/member/view' },
-          //{ header: 'Tagging', link: '/app/member/tagging' },
-          { header: 'Categories', link: '/app/member/categories' },
-        ]"
-      />
-      <NavLink
-              :activeItem="activeItem"
-              header="Templating"
-              link="/app/templating"
-              iconName="flaticon-file"
-              index="templating"
-              :childrenLinks="[
-          { header: 'Create New', link: '/app/templating/new' },
-          { header: 'View', link: '/app/templating/view' },
-          //{ header: 'Update/Inactive', link: '/app/templating/update-inactive' },
-          { header: 'Posting', link: '/app/templating/posting' },
-        ]"
-      />
-      <!--<NavLink
-              :activeItem="activeItem"
-              header="Reports"
-              link="/app/reports"
-              iconName="flaticon-file"
-              index="reports"
-              :childrenLinks="[
-          { header: 'Member Reports', link: '/app/reports/member' },
-          { header: 'Posting Log', link: '/app/reports/posting' },
-        ]"
-      />-->
-      <!--<NavLink
-              :activeItem="activeItem"
-              header="Guides"
-              link="/app/guide"
-              iconName="flaticon-network"
-              index="guide"
-              :childrenLinks="[
-          { header: 'Typography', link: '/app/guide/typography' },
-          { header: 'Tables', link: '/app/guide/tables' },
-          { header: 'Notifications', link: '/app/guide/notifications' },
-          { header: 'Blank', link: '/app/guide/blank' },
-          { header: 'Charts', link: '/app/guide/charts' },
-          { header: 'Icons', link: '/app/guide/icons' },
-          { header: 'Maps', link: '/app/guide/maps' },
-        ]"
-      />-->
     </ul>
   </nav>
   </b-collapse>
@@ -120,22 +42,8 @@ export default {
   components: { NavLink },
   data() {
     return {
-      alerts: [
-        {
-          id: 0,
-          title: 'Sales Report',
-          value: 15,
-          footer: 'Calculating x-axis bias... 65%',
-          color: 'info',
-        },
-        {
-          id: 1,
-          title: 'Personal Responsibility',
-          value: 20,
-          footer: 'Provide required notes',
-          color: 'danger',
-        },
-      ],
+      isMenuLoading: false,
+      navLinks: [],
     };
   },
   methods: {
@@ -145,9 +53,27 @@ export default {
       paths.pop();
       this.changeSidebarActive(paths.join('/'));
     },
+    load_menu() {
+      this.isMenuLoading = true;
+
+      const access_id = window.localStorage.getItem('access_id');
+
+      window.axios.post('/api/authenticate/menu',{ 'access_id' : access_id }).then(({data}) => {
+        this.isMenuLoading = false;
+
+        if (data.result) {
+          this.navLinks = data.data;
+        }
+      }).catch((e) => {
+        this.isMenuLoading = false;
+
+        console.error(e);
+      })
+    }
   },
   created() {
     this.setActiveByRoute();
+    this.load_menu();
   },
   computed: {
     ...mapState('layout', {

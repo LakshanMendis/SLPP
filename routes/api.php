@@ -102,4 +102,5 @@ Route::resource('/category_details', 'CategoryDetailController', [
 ]);
 
 Route::post('/authenticate/login', 'AuthenticationController@login');
+Route::post('/authenticate/menu', 'AuthenticationController@menu');
 Route::resource('/authenticate', 'AuthenticationController');
