@@ -169,6 +169,46 @@ class AuthenticationController extends Controller
         return $result_array;
     }
 
+    public function check(Request $request) {
+        $access_id = (isset($request->access_id)) ? $request->input('access_id') : 0;
+        $module_code = (isset($request->module_code)) ? $request->input('module_code') : '';
+
+        $result_array = array();
+        $result = false;
+        $data = array();
+        $debug = "";
+        $message = "";
+
+        if ($access_id > 0 && !empty($module_code)) {
+            $permission_check_query = "SELECT
+            COUNT(PERM.id) AS c
+            FROM
+            master_permissions AS PERM
+            INNER JOIN master_modules AS `MOD` ON PERM.module_id = `MOD`.id
+            WHERE
+            `MOD`.`code` = '$module_code' AND
+            PERM.access_id = $access_id AND
+            `MOD`.`status` = 1";
+
+            $permission_check_res = DB::select($permission_check_query);
+            $row_count = $permission_check_res[0]->c;
+            $debug = $permission_check_res;
+
+            if ($row_count > 0) {
+                $result = true;
+            }
+        } else {
+            $debug = $request;
+        }
+
+        $result_array['result'] = $result;
+        $result_array['debug'] = $debug;
+        $result_array['message'] = $message;
+        $result_array['data'] = $data;
+
+        return $result_array;
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -68,7 +68,7 @@ export default {
         this.isMenuLoading = false;
 
         console.error(e);
-      })
+      });
     }
   },
   created() {

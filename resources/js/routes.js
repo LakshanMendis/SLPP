@@ -57,199 +57,199 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: '/login',
-        name: 'Login',
+        name: 'login',
         component: Login,
     },
     {
         path: '/error',
-        name: 'Error',
+        name: 'error',
         component: ErrorPage,
     },
     {
         path: '/app',
-        name: 'Layout',
+        name: 'app',
         component: Layout,
         children: [
             {
                 path: 'dashboard',
-                name: 'Dashboard',
+                name: 'dashboard',
                 component: Dashboard,
             },
             {
                 path: 'member/view',
-                name: 'View Member',
+                name: 'memberView',
                 component: MemberView,
             },
             {
                 path: 'member/new',
-                name: 'New Member',
+                name: 'memberAddNew',
                 component: MemberNew,
             },
             {
                 path: 'member/update-inactive',
-                name: 'Update or Inactive Member',
+                name: 'memberUpdateInactive',
                 component: MemberUpdate,
             },
             {
                 path: 'member/tagging',
-                name: 'Tag Members',
+                name: 'memberTagging',
                 component: MemberTagging,
             },
             {
                 path: 'member/categories',
-                name: 'Categories',
+                name: 'memberCategories',
                 component: Categories,
             },
             {
                 path: 'templating/view',
-                name: 'View Template',
+                name: 'templatingView',
                 component: TemplateView,
             },
             {
                 path: 'templating/new',
-                name: 'New Template',
+                name: 'templatingCreateNew',
                 component: TemplateNew,
             },
             {
                 path: 'templating/update-inactive',
-                name: 'Update or Inactive Template',
+                name: 'templatingUpdateInac',
                 component: TemplateUpdate,
             },
             {
                 path: 'templating/posting',
-                name: 'Posting',
+                name: 'templatingPosting',
                 component: TemplatePosting,
             },
             {
                 path: 'guide/typography',
-                name: 'Typography',
+                name: 'guidesTypo',
                 component: Typography,
             },
             {
                 path: 'guide/tables',
-                name: 'Tables',
+                name: 'guidesTables',
                 component: Tables,
             },
             {
                 path: 'guide/notifications',
-                name: 'Notifications',
+                name: 'guidesNotifications',
                 component: Notifications,
             },
             {
                 path: 'guide/blank',
-                name: 'Blank',
+                name: 'guidesBlank',
                 component: AnotherPage,
             },
             {
                 path: 'guide/icons',
-                name: 'Icons',
+                name: 'guidesIcons',
                 component: Icons,
             },
             {
                 path: 'guide/maps',
-                name: 'Maps',
+                name: 'guidesMaps',
                 component: Maps,
             },
             {
                 path: 'guide/charts',
-                name: 'Charts',
+                name: 'guidesCharts',
                 component: Charts,
             },
             {
                 path: 'admin/users',
-                name: 'Users',
+                name: 'users',
                 component: Users,
             },
             {
                 path: 'admin/modules',
-                name: 'Modules',
+                name: 'modules',
                 component: Modules,
             },
             {
                 path: 'admin/permissions',
-                name: 'Permissions',
+                name: 'permissions',
                 component: Permissions,
             },
             {
                 path: 'admin/companies',
-                name: 'Companies',
+                name: 'companies',
                 component: Companies,
             },
             {
                 path: 'admin/locations',
-                name: 'Locations',
+                name: 'locations',
                 component: Locations,
             },
             {
                 path: 'admin/departments',
-                name: 'Departments',
+                name: 'departments',
                 component: Departments,
             },
             {
                 path: 'admin/designations',
-                name: 'Designations',
+                name: 'designations',
                 component: Designations,
             },
             {
                 path: 'master/titles',
-                name: 'Titles',
+                name: 'titles',
                 component: Titles,
             },
             {
                 path: 'master/nationality',
-                name: 'Nationality',
+                name: 'nationality',
                 component: Nationality,
             },
             {
                 path: 'master/religions',
-                name: 'Religions',
+                name: 'religions',
                 component: Religions,
             },
             {
                 path: 'master/provinces',
-                name: 'Provinces',
+                name: 'provinces',
                 component: Provinces,
             },
             {
                 path: 'master/districts',
-                name: 'Districts',
+                name: 'districts',
                 component: Districts,
             },
             {
                 path: 'master/electorates',
-                name: 'Electorates',
+                name: 'electorates',
                 component: Electorates,
             },
             {
                 path: 'master/localauthorities',
-                name: 'LocalAuthorities',
+                name: 'localAuthorities',
                 component: LocalAuthorities,
             },
             {
                 path: 'master/wards',
-                name: 'Wards',
+                name: 'wards',
                 component: Wards,
             },
             {
                 path: 'master/gndivisions',
-                name: 'GNDivisions',
+                name: 'gnDivisions',
                 component: GNDivisions,
             },
             {
                 path: 'reports/member',
-                name: 'MemberReport',
+                name: 'reports',
                 component: MemberReport,
             },
             {
                 path: 'reports/posting',
-                name: 'PostingReport',
+                name: 'reportsPostingLog',
                 component: PostingReport,
             },
         ],
     },
     {
         path: '*',
-        name: 'Error',
+        name: 'error',
         component: ErrorPage,
     }
 ];
@@ -258,10 +258,27 @@ const router = new VueRouter({ mode: 'history', routes: routes });
 
 router.beforeEach((to, from, next) => {
     const access_id = window.localStorage.getItem('access_id');
+    const to_index = to.name;
 
-    console.log('Checking permission to access '+to+' from '+from+' for access id: '+access_id);
+    const send_data = {
+        'access_id' : access_id,
+        'module_code' : to_index
+    }
 
-    next();
+    if (to_index == 'login' || to_index == 'dashboard' || to_index == 'error'){
+        next();
+    } else {
+        window.axios.post('/api/authenticate/check',send_data).then(({data}) => {
+            if (data.result) {
+                next();
+            } else {
+                next(false);
+            }
+        }).catch((e) => {
+            next(false);
+            console.error(e);
+        });
+    }
 });
 
 export default router;
