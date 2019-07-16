@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\access;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AccessController extends Controller
 {
@@ -22,9 +23,28 @@ class AccessController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $user_id = (!isset($request->user_id)) ? 0 : $request->input('user_id');
+        $username = (!isset($request->username)) ? "" : $request->input('username');
+        $password = (!isset($request->password)) ? "" : $request->input('password');
+
+        if ($user_id > 0 && !empty($username) && !empty($password)) {
+            $enc_password = sha1($password);
+
+            $access = new access;
+
+            $access->user_id = $user_id;
+            $access->username = $username;
+            $access->password = $enc_password;
+            $access->status = 1;
+
+            $access->save();
+
+            return response($access->jsonSerialize(), Response::HTTP_CREATED);
+        } else {
+            return response([], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**

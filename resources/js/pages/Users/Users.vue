@@ -11,299 +11,262 @@
     <b-row>
       <b-col lg="12">
         <Widget>
-        <b-form id="formPersonal" @submit.stop.prevent="submitPersonal()">
-          <b-row>
-                  <b-col md="3 p-5 bg-dark" id="image-container" class="image-overlay mb-3 ml-4 mr-5">
-                    <b-row>
-                      <b-col md="12" class="pb-1 pl-4 pr-4">
-                        <b-img v-if="!profile_img.url" id="image-preview" class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Default Image"></b-img>
-                        <img v-if="profile_img.url" id="image-preview-raw" class="prof_img_raw" :src="profile_img.url" alt="Profile Image" />
-                      </b-col>
-                    </b-row>
-
-                    <b-row>
-                      <b-col md="12">
-                        <b-progress v-if="profile_img.upload_progress_show" :value="profile_img.upload_progress_done" :max="profile_img.upload_progress_max" show-progress animated></b-progress>
-                        <b-form-file
-                          v-if="!profile_img.blocked"
-                          id="image-browser"
-                          ref="image-browser"
-                          placeholder="Choose an image..."
-                          drop-placeholder="Drop file here..."
-                          :disabled="profile_img.blocked"
-                          @change="imageChanged"
-                        ></b-form-file>
-                      </b-col>
-                    </b-row>
+          <b-form id="formUser" @submit.stop.prevent="submitUser()" @reset.stop.prevent="resetAll()" novalidate>
+            <b-row>
+              <b-col md="4" id="image-container" class="mb-3 p-5 bg-dark">
+                <b-row>
+                  <b-col md="12" class="pb-1 pl-4 pr-4">
+                    <b-img v-if="!profile_img.url" id="image-preview" class="prof_img" thumbnail fluid :src="require('../../assets/avatar.png')" alt="Default Image"></b-img>
+                    <img v-if="profile_img.url" id="image-preview-raw" class="prof_img_raw" :src="profile_img.url" alt="Profile Image" />
                   </b-col>
+                </b-row>
 
-                  <b-col md="8" class="ml-4">
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group id="input-group-1" label="*Employee No:" label-for="input-1">
-                          <b-form-input
-                            id="input-1"
-                            required
-                            value=""
-                            placeholder="Enter Employee No"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-2" label="*EPF No:" label-for="input-2">
-                          <b-form-input
-                            id="input-2"
-                            required
-                            value=""
-                            placeholder="Enter EPF No"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-3" label="*First Name:" label-for="input-3">
-                          <b-form-input
-                            id="input-3"
-                            required
-                            value=""
-                            placeholder="Enter First Name"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-4" label="*Last Name:" label-for="input-4">
-                          <b-form-input
-                            id="input-4"
-                            required
-                            value=""
-                            placeholder="Enter Last Name"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-5" label="Gender:" label-for="input-5">
-                          <b-form-select class="mb-3" id="input-5">
-                            <option value="" selected disabled>Select Gender</option>
-                            <option value="female">Female</option>
-                            <option value="male">Male</option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-6" label="*Date of Birth:" label-for="input-6">
-                          <b-form-input
-                           type="date"
-                            id="input-6"
-                            required
-                            placeholder="Date of Birth"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-12" label="*Mobile No:" label-for="input-12">
-                          <b-form-input
-                            id="input-12"
-                            required
-                            placeholder="Enter Mobile No"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="6">
-                        <b-form-group id="input-group-13" label="*Email:" label-for="input-13">
-                          <b-form-input
-                            id="input-13"
-                            required
-                            placeholder="Enter Email Address"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                    </b-row>
-                  </b-col>
-
+                <b-row>
                   <b-col md="12">
-                    <b-row>
-                       <b-col md="4">
-                        <b-form-group id="input-group-7" label="*NIC:" label-for="input-7">
-                          <b-form-input
-                            id="input-7"
-                            required
-                            placeholder="NIC"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col>
+                    <b-progress v-if="profile_img.upload_progress_show" :value="profile_img.upload_progress_done" :max="profile_img.upload_progress_max" show-progress animated></b-progress>
+                    <b-form-file
+                      v-if="!profile_img.blocked"
+                      id="image-browser"
+                      ref="image-browser"
+                      placeholder="Choose an image..."
+                      drop-placeholder="Drop file here..."
+                      :disabled="profile_img.blocked"
+                      @change="imageChanged"
+                    ></b-form-file>
+                  </b-col>
+                </b-row>
+              </b-col>
 
-                      <b-col md="4">
-                        <b-form-group id="input-group-8" label="Responsible District:" label-for="input-8">
-                          <b-form-select class="mb-3" id="input-8">
-                            <option value="1" selected disabled>Select Responsibale District</option>
-                            <option
-                              v-for="data in nationalities"
-                              :value="data.id"
-                              :key="data.id"
-                            >{{ data.short_name + "/" + data.full_name}}</option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="4">
-                        <b-form-group id="input-group-9" label="Location:" label-for="input-9">
-                          <b-form-select class="mb-3" id="input-9">
-                            <option value="1" selected disabled>Select Location</option>
-                            <option
-                              v-for="data in locations"
-                              :value="data.id"
-                              :key="data.id"
-                            >{{ data.location }}</option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="4">
-                        <b-form-group id="input-group-10" label="Department:" label-for="input-10">
-                          <b-form-select class="mb-3" id="input-10">
-                            <option value="1" selected disabled>Select Department</option>
-                            <option
-                              v-for="data in departments"
-                              :value="data.id"
-                              :key="data.id"
-                            >{{ data.department }}</option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="4">
-                        <b-form-group id="input-group-11" label="Designation:" label-for="input-11">
-                          <b-form-select class="mb-3" id="input-11">
-                            <option value="1" selected disabled>Select Designation</option>
-                            <option
-                              v-for="data in designations"
-                              :value="data.id"
-                              :key="data.id"
-                            >{{ data.designations }}</option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-12" label="*Mobile No:" label-for="input-12">
-                          <b-form-input
-                            id="input-12"
-                            required
-                            placeholder="Enter Mobile No"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-13" label="*Email:" label-for="input-13">
-                          <b-form-input
-                            id="input-13"
-                            required
-                            placeholder="Enter Email Address"
-                          ></b-form-input>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-14" label="Immediate:" label-for="input-14">
-                          <b-form-select class="mb-3" id="input-14">
-                            <option value="1" selected disabled>Select Immediate</option>
-                            <option></option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-15" label="Department Head:" label-for="input-15">
-                          <b-form-select class="mb-3" id="input-15">
-                            <option value="1" selected disabled>Select Department Head</option>
-                            <option></option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-16" label="Higher:" label-for="input-16">
-                          <b-form-select class="mb-3" id="input-16">
-                            <option value="1" selected disabled>Select Higher</option>
-                            <option></option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-17" label="Alternate 1:" label-for="input-17">
-                          <b-form-select class="mb-3" id="input-17">
-                            <option value="1" selected disabled>Select Alternate 1</option>
-                            <option></option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <!-- <b-col md="4">
-                        <b-form-group id="input-group-18" label="Alternate 2:" label-for="input-18">
-                          <b-form-select class="mb-3" id="input-18">
-                            <option value="" selected disabled>Select Alternate 2</option>
-                            <option></option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col> -->
-
-                      <b-col md="4">
-                        <b-form-group id="input-group-21" label="Status:" label-for="input-21">
-                          <b-form-select class="mb-3" id="input-21" value="1">
-                            <option value="" selected disabled>Select Status</option>
-                            <option value="1" selected>Active</option>
-                            <option value="0">Inactive</option>
-                          </b-form-select>
-                        </b-form-group>
-                      </b-col>
-
-                      
-
-                      <b-col md="4">
-                        <b-form-group id="input-group-19" label="Joined At:" label-for="input-19">
-                          <b-form-input
-                           type="date"
-                            id="input-19"
-                            required>
-                            </b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      <b-col md="4">
-                        <b-form-group id="input-group-20" label="Left At:" label-for="input-20">
-                          <b-form-input
-                           type="date"
-                            id="input-20"
-                            required>
-                            </b-form-input>
-                        </b-form-group>
-                      </b-col>
-
-                      
-
-                    </b-row>
+              <b-col md="8">
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group id="group_employee_no" label="Employee No:" label-for="employee_no">
+                      <b-form-input
+                        id="employee_no"
+                        value=""
+                        placeholder="Enter Employee No"
+                        v-model="form_user.employee_no"
+                      ></b-form-input>
+                    </b-form-group>
                   </b-col>
 
-          </b-row>
-        </b-form>
+                  <b-col md="6">
+                    <b-form-group id="group_epf_no" label="EPF No:" label-for="epf_no">
+                      <b-form-input
+                        id="epf_no"
+                        value=""
+                        placeholder="Enter EPF No"
+                        v-model="form_user.epf_no"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
 
-        <div class="mt-4 clearfix">
-            <div class="float-right">
-              <b-button variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+                  <b-col md="6">
+                    <b-form-group id="group_firstname" label="*First Name:" label-for="firstname">
+                      <b-form-input
+                        id="firstname"
+                        value=""
+                        placeholder="Enter First Name"
+                        v-model="form_user.firstname"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="group_lastname" label="Last Name:" label-for="lastname">
+                      <b-form-input
+                        id="lastname"
+                        value=""
+                        placeholder="Enter Last Name"
+                        v-model="form_user.lastname"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="group_gender" label="Gender:" label-for="gender">
+                      <b-form-select class="mb-3" id="gender" v-model="form_user.gender">
+                        <option value="" selected disabled>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="group_dob" label="Date of Birth:" label-for="dob">
+                      <b-form-input
+                        type="date"
+                        id="dob"
+                        v-model="form_user.dob"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="group_mobile" label="Mobile No:" label-for="mobile">
+                      <b-form-input
+                        id="mobile"
+                        placeholder="Enter Mobile No"
+                        v-model="form_user.mobile"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6">
+                    <b-form-group id="group_email" label="Email:" label-for="email">
+                      <b-form-input
+                        id="email"
+                        placeholder="Enter Email Address"
+                        v-model="form_user.email"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+
+              <b-col md="12">
+                <b-row>
+                  <b-col md="4">
+                    <b-form-group id="group_nic" label="*NIC:" label-for="nic">
+                      <b-form-input
+                        id="nic"
+                        placeholder="NIC"
+                        v-model="form_user.nic"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_districts" label="Responsible District:" label-for="districts">
+                      <b-form-select class="mb-3" id="districts" v-model="form_user.districts">
+                        <option value="" selected>All</option>
+                        <option
+                          v-for="data in districts"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_location" label="Location:" label-for="location">
+                      <b-form-select class="mb-3" id="location" v-model="form_user.location">
+                        <option value="" selected disabled>Select Location</option>
+                        <option
+                          v-for="data in locations"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.location }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_department" label="Department:" label-for="department">
+                      <b-form-select class="mb-3" id="department" v-model="form_user.department">
+                        <option value="" selected disabled>Select Department</option>
+                        <option
+                          v-for="data in departments"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.department }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_designation" label="Designation:" label-for="designation">
+                      <b-form-select class="mb-3" id="designation" v-model="form_user.designation">
+                        <option value="" selected disabled>Select Designation</option>
+                        <option
+                          v-for="data in designations"
+                          :value="data.id"
+                          :key="data.id"
+                        >{{ data.designations }}</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_status" label="Status:" label-for="status">
+                      <b-form-select class="mb-3" id="status" v-model="form_user.status">
+                        <option value="1" selected>Active</option>
+                        <option value="0">Inactive</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_joined_at" label="Joined At:" label-for="joined_at">
+                      <b-form-input
+                        type="date"
+                        id="joined_at"
+                        v-model="form_user.joined_at"
+                      >
+                      </b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="4">
+                    <b-form-group id="group_left_at" label="Left At:" label-for="left_at">
+                      <b-form-input
+                        type="date"
+                        id="left_at"
+                        v-model="form_user.left_at"
+                      >
+                      </b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md=4 class="pt-5 text-center">
+                    <b-form-checkbox
+                      id="system_access"
+                      v-model="form_user.system_access"
+                      name="system_access"
+                      :value="true"
+                      :unchecked-value="false"
+                    >
+                      System Access
+                    </b-form-checkbox>
+                  </b-col>
+
+                  <b-col md="6" class="mt-3">
+                    <b-form-group id="group_username" label="*Username:" label-for="username">
+                      <b-form-input
+                        id="username"
+                        placeholder="Enter Username"
+                        v-model="form_user.username"
+                        :disabled="!form_user.system_access"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="6" class="mt-3">
+                    <b-form-group id="group_password" label="*Password:" label-for="password">
+                      <b-form-input
+                        id="password"
+                        placeholder="Enter Password"
+                        type="password"
+                        v-model="form_user.password"
+                        :disabled="!form_user.system_access"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+
+            <div class="mt-4 clearfix">
+              <div class="float-right">
+                <b-button type="submit" variant="maroon" size="md"><i class="fa fa-check"></i> Save</b-button>
+              </div>
+              <div class="float-left">
+                <b-button type="reset" variant="warning" size="md"><i class="fa fa-plus"></i> New</b-button>
+              </div>
             </div>
-            <div class="float-left">
-              <b-button variant="warning" size="md"><i class="fa fa-plus"></i> New</b-button>
-            </div>
-          </div>
+          </b-form>
         </Widget>
       </b-col>
     </b-row>
@@ -314,39 +277,24 @@
 
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
-import CategoryMultiple from 'RESO/js/components/CategoryMultiple/CategoryMultiple';
 import { required } from 'vuelidate/lib/validators';
 import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'MemberNew',
-  components: { Widget, Multiselect, CategoryMultiple },
+  components: { Widget, Multiselect },
   data() {
     return {
-      category_loaded: false,
-      categories: [],
-      category_values:[],
-      category_init_values:[],
-      tabs:{
-        showHelpAlert: true,
-        childTabsDisabled: true
-      },
+      global_user_id: 0,
+      districts: [],
+      locations: [],
+      departments: [],
+      designations: [],
       search: {
-        select_member: '',
-        load_members: [],
+        select_user: '',
+        load_users: [],
         loading: false
       },
-      global_member_id: 0,
-      titles: [],
-      nationalities: [],
-      religions: [],
-      provinces: [],
-      districts: [],
-      electorates: [],
-      localAuths: [],
-      wards: [],
-      gnDivs: [],
-      languages: [],
       profile_img: {
         blocked: true,
         image: '',
@@ -355,229 +303,144 @@ export default {
         upload_progress_max: 100,
         url: null
       },
-      form_personal: {
-        id: this.global_member_id,
-        text_membership_id: '',
-        select_title: '',
-        text_firstname: '',
-        text_lastname: '',
-        text_callingname: '',
-        text_nic: '',
-        select_nationality: 1,
-        select_religion: 1,
-        text_remarks: '',
-        select_status: 1
+      form_user: {
+        id: this.global_user_id,
+        employee_no: '',
+        epf_no: '',
+        firstname: '',
+        lastname: '',
+        gender: '',
+        dob: '',
+        mobile: '',
+        email: '',
+        nic: '',
+        districts: [],
+        location: 1,
+        department: "",
+        designation: "",
+        status: 1,
+        joined_at: "",
+        left_at: "",
+        system_access: true,
+        username: "",
+        password: "",
       },
-      form_electoral: {
-        id: this.global_member_id,
-        select_province: 1,
-        select_district: 1,
-        select_electorate: 1,
-        select_local_auth: 1,
-        select_ward: 1,
-        select_gn: 1
-      },
-      form_communication: {
-        id: this.global_member_id,
-        text_address_line1: '',
-        text_address_line2: '',
-        text_city: '',
-        text_postalcode: '',
-        text_mobile1: '',
-        text_mobile2: '',
-        text_home_tel: '',
-        text_office_tel: '',
-        text_fax: '',
-        text_email: ''
-      },
-      form_language: {
-        id: this.global_member_id,
-        select_pref_lang: 1,
-        text_pref_name: "",
-        text_pref_address_line1: "",
-        text_pref_address_line2: "",
-        text_pref_city: ""
-      }
     }
   },
-  validations: {
-    form_personal: {
-      text_membership_id: { required },
-      text_firstname: { required },
-      text_callingname: { required },
-      text_nic: { required },
+  /*validations: {
+    form_user: {
+      firstname: { required },
+      nic: { required },
     },
-  },
+  },*/
   methods: {
-    all_titles() {
-      window.axios.get('/api/titles').then(({ data }) => {
-        this.titles = data;
-      });
-    },
-    all_nationalities() {
-      window.axios.get('/api/nationalities').then(({ data }) => {
-        this.nationalities = data;
-      });
-    },
-    all_religions() {
-      window.axios.get('/api/religions').then(({ data }) => {
-        this.religions = data;
-      });
-    },
-    all_provinces() {
-      window.axios.get('/api/provinces').then(({ data }) => {
-        this.provinces = data;
-      });
-    },
-    all_districts(province_id = 1) {
-      if (province_id == 1) return;
-
-      const para = { 'province_id': province_id };
-
-      window.axios.get('/api/districts', { params: para }).then(({ data }) => {
+    all_districts() {
+      window.axios.get('/api/districts').then(({ data }) => {
         this.districts = data;
       });
     },
-    all_electorates(province_id = 1) {
-      if (province_id == 1) return;
+    all_locations(company_id = 1) {
+      if (company_id == "") return;
 
-      const para = { 'province_id': province_id };
+      const para = { 'company_id': company_id, 'query' : 'all-active' };
 
-      window.axios.get('/api/electorates', { params: para }).then(({ data }) => {
-        this.electorates = data;
+      window.axios.get('/api/locations', { params: para }).then(({ data }) => {
+        this.locations = data;
       });
     },
-    all_local_auths(district_id = 1) {
-      if (district_id == 1) return;
+    all_departments(location_id = 1) {
+      if (location_id == "") return;
 
-      const para = { 'district_id': district_id };
+      const para = { 'location_id': location_id };
 
-      window.axios.get('/api/localAuths', { params: para }).then(({ data }) => {
-        this.localAuths = data;
+      window.axios.get('/api/departments', { params: para }).then(({ data }) => {
+        this.departments = data;
       });
     },
-    all_wards(local_auth_id = 1) {
-      if (local_auth_id == 1) return;
-
-      const para = { 'local_auth_id': local_auth_id };
-
-      window.axios.get('/api/wards', { params: para }).then(({ data }) => {
-        this.wards = data;
+    all_designations() {
+      window.axios.get('/api/designations').then(({ data }) => {
+        this.designations = data;
       });
-    },
-    all_gndivs(ward_id = 1) {
-      if (ward_id == 1) return;
-
-      const para = { 'ward_id': ward_id };
-
-      window.axios.get('/api/gnDivs', { params: para }).then(({ data }) => {
-        this.gnDivs = data;
-      });
-    },
-    all_languages() {
-      window.axios.get('/api/languages').then(({ data }) => {
-        this.languages = data;
-      });
-    },
-    get_categories() {
-      window.axios.get('/api/categories').then(({ data }) => {
-        this.categories = data;
-
-        this.category_loaded = true;
-      });
-    },
-    get_category_values() {
-      const member_id = this.global_member_id;
-      const para = { 'member_id': member_id };
-
-      window.axios.get('/api/categories/values', { params: para }).then(({ data }) => {
-        this.category_values = data;
-
-        if (!this.category_loaded) {
-          this.category_init_values = data;
-          this.get_categories();
-        }
-      });
-    },
-    show_why_disabled(){
-      if (this.tabs.childTabsDisabled){
-        alert ('Please fill basic/personal details first or search and select existing member to edit!!');
-      }
     },
     resetAll(){
-      this.search.select_member = "";
-      this.global_member_id = 0;
-      this.tabs.childTabsDisabled = true;
+      this.search.select_user = "";
+      this.global_user_id = 0;
 
       if (!this.profile_img.blocked) this.$refs['image-browser'].reset();
       this.profile_img.blocked = true;
       this.profile_img.url = null;
 
-      this.$v.$reset();
+      this.form_user.employee_no = "";
+      this.form_user.epf_no = "";
+      this.form_user.firstname = "";
+      this.form_user.lastname = "";
+      this.form_user.gender = "";
+      this.form_user.dob = "";
+      this.form_user.mobile = "";
+      this.form_user.email = "";
+      this.form_user.nic = "";
+      this.form_user.districts = [];
+      this.form_user.location = 1;
+      this.form_user.department = "";
+      this.form_user.designation = "";
+      this.form_user.status = 1;
+      this.form_user.joined_at = "";
+      this.form_user.left_at = "";
+      this.form_user.system_access = true;
+      this.form_user.username = "";
+      this.form_user.password = "";
 
+      //this.$v.$reset();
     },
-    
     updateAll() {
-      console.log("form ready to submit for update changes, no validation errors!!");
 
-      if (this.global_member_id > 0){
-        this.$v.form_personal.$touch();
-
-        if (this.$v.form_personal.$anyError) {
-          console.error("Form submit validate errors on personal form");
-          this.$swal('Validation Error', 'Please check personal form for validation errors!', 'error');
-          return
-        }
-
-        this.saveCategories();
-
-        this.form_language.text_pref_name = (this.form_language.text_pref_name == "") ? this.form_personal.text_firstname + " " + this.form_personal.text_lastname : this.form_language.text_pref_name;
-        this.form_language.text_pref_address_line1 = (this.form_language.text_pref_address_line1 == "") ? this.form_communication.text_address_line1 : this.form_language.text_pref_address_line1;
-        this.form_language.text_pref_address_line2 = (this.form_language.text_pref_address_line2 == "") ? this.form_communication.text_address_line2 : this.form_language.text_pref_address_line2;
-        this.form_language.text_pref_city = (this.form_language.text_pref_city == "") ? this.form_communication.text_city : this.form_language.text_pref_city;
-
-        let form_all = {};
-
-        form_all = $.extend(form_all, this.form_personal);
-        form_all = $.extend(form_all, this.form_electoral);
-        form_all = $.extend(form_all, this.form_communication);
-        form_all = $.extend(form_all, this.form_language);
-
-        window.axios.put('/api/members/' + this.global_member_id, form_all).then(({ data }) => {
-          this.$swal('Success', 'Member updated successfully!!', 'success');
-        });
-      }else{
-        this.$swal('Error', 'Either you must enter and save personal data first, or select a member from search to update!', 'error');
-      }
     },
-    submitPersonal() {
-      this.$v.form_personal.$touch();
+    submitUser() {
+      /*this.$v.form_user.$touch();
 
-      if (this.$v.form_personal.$anyError) {
-        console.error("Form submit validate errors on personal form");
+      if (this.$v.form_user.$anyError) {
+        console.error("Form submit validate errors on user form");
         return
       }
 
-      console.log("personal form ready to submit, no validation errors!!");
+      console.log("user form ready to submit, no validation errors!!");*/
 
-      if (this.global_member_id > 0) {
+      if (this.global_user_id > 0) {
         this.updateAll();
       }else{
-        window.axios.get('/api/members/create', { params: this.form_personal }).then(({ data }) => {
+        window.axios.get('/api/users/create', { params: this.form_user }).then(({ data }) => {
           if (data.id) {
-            this.global_member_id = data.id;
-            this.$swal('Success', 'Member created successfully!!', 'success');
-            this.tabs.childTabsDisabled = false;
+            this.global_user_id = data.id;
             this.profile_img.blocked = false;
+
+            if (this.form_user.system_access) {
+              const form_access = {
+                user_id: data.id,
+                username: this.form_user.username,
+                password: this.form_user.password,
+              }
+
+              window.axios.get('/api/access/create', { params: form_access }).then(({ data }) => {
+                if (data.id) {
+                  this.$swal('Success', 'User & access created successfully!!', 'success');
+                }
+              }).catch((e) => {
+                console.error(e);
+                this.$swal('Warning', 'User created successfully but access creation failed!!', 'warning');
+              });
+            } else {
+              this.$swal('Success', 'User created successfully!!', 'success');
+            }
           }
+        }).catch((e) => {
+          console.error(e);
+          this.$swal('Error', 'User creation failed', 'error');
         });
       }
     },
-    
-    selectedMember (selectedOption) {
-      this.search.select_member = selectedOption;
-      this.global_member_id = this.search.select_member.id;
-      this.tabs.childTabsDisabled = false;
+    selectedUser (selectedOption) {
+      this.search.select_user = selectedOption;
+      this.global_user_id = this.search.select_user.id;
       this.profile_img.blocked = false;
 
       setTimeout(() => {
@@ -585,12 +448,12 @@ export default {
       }, 500);
 
       if (this.search.select_member.image_path != null && this.search.select_member.image_path != "") {
-        this.profile_img.url = this.search.select_member.image_path;
+        this.profile_img.url = this.search.select_user.image_path;
       }else{
         this.profile_img.url = null;
       }
 
-      this.form_personal.text_membership_id = this.search.select_member.membership_id;
+      /*this.form_personal.text_membership_id = this.search.select_member.membership_id;
       this.form_personal.select_title = this.search.select_member.title_id;
       this.form_personal.text_firstname = this.search.select_member.firstname;
       this.form_personal.text_lastname = this.search.select_member.lastname;
@@ -599,43 +462,11 @@ export default {
       this.form_personal.select_nationality = this.search.select_member.nationality_id;
       this.form_personal.select_religion = this.search.select_member.religion_id;
       this.form_personal.text_remarks = this.search.select_member.remarks;
-      this.form_personal.select_status = this.search.select_member.status;
-
-      this.all_districts(this.search.select_member.province_id);
-      this.all_electorates(this.search.select_member.province_id);
-      this.all_local_auths(this.search.select_member.district_id);
-      this.all_wards(this.search.select_member.local_auth_id);
-      this.all_gndivs(this.search.select_member.ward_id);
-
-      this.form_electoral.select_province = this.search.select_member.province_id;
-      this.form_electoral.select_district = this.search.select_member.district_id;
-      this.form_electoral.select_electorate = this.search.select_member.electorate_id;
-      this.form_electoral.select_local_auth = this.search.select_member.local_auth_id;
-      this.form_electoral.select_ward = this.search.select_member.ward_id;
-      this.form_electoral.select_gn = this.search.select_member.gn_id;
-
-      this.form_communication.text_address_line1 = this.search.select_member.address_line1;
-      this.form_communication.text_address_line2 = this.search.select_member.address_line2;
-      this.form_communication.text_city = this.search.select_member.city;
-      this.form_communication.text_postalcode = this.search.select_member.postal_code;
-      this.form_communication.text_mobile1 = this.search.select_member.mobile1;
-      this.form_communication.text_mobile2 = this.search.select_member.mobile2;
-      this.form_communication.text_home_tel = this.search.select_member.home_phone;
-      this.form_communication.text_office_tel = this.search.select_member.office_phone;
-      this.form_communication.text_fax = this.search.select_member.fax;
-      this.form_communication.text_email = this.search.select_member.email;
-
-      this.get_category_values();
-
-      this.form_language.select_pref_lang = this.search.select_member.pref_lang_id;
-      this.form_language.text_pref_name = this.search.select_member.pref_lang_name;
-      this.form_language.text_pref_address_line1 = this.search.select_member.pref_lang_address_line1;
-      this.form_language.text_pref_address_line2 = this.search.select_member.pref_lang_address_line2;
-      this.form_language.text_pref_city = this.search.select_member.pref_lang_city;
+      this.form_personal.select_status = this.search.select_member.status;*/
     },
     imageChanged (e) {
       this.profile_img.image = e.target.files[0];
-      const member_id = this.global_member_id;
+      const user_id = this.global_user_id;
       this.profile_img.upload_progress_show = true;
 
       const config = {
@@ -650,9 +481,9 @@ export default {
 
       let formData = new FormData();
       formData.append('image', this.profile_img.image);
-      formData.append('member_id', member_id);
+      formData.append('user_id', user_id);
 
-      window.axios.post('/api/members/image/upload', formData, config).then(({ data }) => {
+      window.axios.post('/api/users/image/upload', formData, config).then(({ data }) => {
         this.profile_img.upload_progress_show = false;
         this.profile_img.url = data.url;
       }).catch((e) => {
@@ -662,12 +493,10 @@ export default {
     }
   },
   created() {
-    this.all_titles();
-    this.all_nationalities();
-    this.all_religions();
-    this.all_provinces();
-    this.all_languages();
-    this.get_category_values();
+    this.all_districts();
+    this.all_locations(1);
+    this.all_departments(1);
+    this.all_designations();
   }
 };
 </script>

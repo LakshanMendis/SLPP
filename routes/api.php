@@ -105,3 +105,10 @@ Route::post('/authenticate/login', 'AuthenticationController@login');
 Route::post('/authenticate/menu', 'AuthenticationController@menu');
 Route::post('/authenticate/check', 'AuthenticationController@check');
 Route::resource('/authenticate', 'AuthenticationController');
+
+Route::get('/users/search', 'UserController@search');
+Route::resource('/users', 'UserController');
+Route::resource('/access', 'AccessController');
+
+Route::post('/permission/save', 'PermissionController@save');
+Route::resource('/permission', 'PermissionController');

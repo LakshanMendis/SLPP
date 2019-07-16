@@ -26,7 +26,6 @@ import Stores from 'RESO/js/stores';
 // Component File
 import App from 'RESO/js/views/App';
 
-//Vue.use(Vuetify, VueAxios, axios);
 Vue.use( BootstrapVue, VueAxios, axios );
 Vue.use( CKEditor );
 Vue.use( Vuelidate );
