@@ -477,6 +477,41 @@
         </Widget>
       </b-col>
     </b-row>
+
+    <b-modal id="print-modal">
+      <template slot="modal-title">
+        Print Options
+      </template>
+      <div class="d-block text-center">
+        <b-row>
+          <b-col md="2"></b-col>
+
+          <b-col md="4">
+            <b-button
+              block
+              variant="primary"
+              @click="dumpExcel"
+            >
+              <i class="fa fa-file-excel-o"></i><br/>
+              Excel
+            </b-button>
+          </b-col>
+
+          <b-col md="4">
+            <b-button
+              block
+              variant="maroon"
+              @click="dumpPdf"
+            >
+              <i class="fa fa-file-pdf-o"></i><br/>
+              PDF
+            </b-button>
+          </b-col>
+
+          <b-col md="2"></b-col>
+        </b-row>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -744,31 +779,15 @@ export default {
         para = $.extend(para, this.template_selection);
       }
 
+      if (!this.print_option_disabled){
+        this.$bvModal.show('print-modal');
+      }
+
       this.selected_media.forEach(el => {
         switch (el) {
           case 'SMS':
             window.axios.get('/api/posts/sms', { params: para }).then(({ data }) => {
               console.log(data);
-            });
-          break;
-          
-          case 'PRINT':
-            window.axios({
-              url: '/api/posts/print',
-              method: 'post',
-              data: para,
-              headers: {'X-CSRF-TOKEN': token.csrf},
-              responseType: 'blob'
-            }).then(({ data }) => {
-              const blob = new Blob([data]);
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = 'print.pdf';
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
-              window.URL.revokeObjectURL(url);
             });
           break;
 
@@ -778,6 +797,86 @@ export default {
             });
           break;
         }
+      });
+    },
+    dumpExcel() {
+      let para = {};
+      let category_values = {
+        categories: this.category_values
+      };
+      let mode_type = {
+        mode: this.target_type
+      };
+
+      if (this.target_type == "multiple") {
+        para = $.extend(para, this.form_electoral);
+        para = $.extend(para, category_values);
+        para = $.extend(para, this.template_selection);
+        para = $.extend(para, mode_type);
+      }else{
+        para = {
+          member_id: this.search.select_member.id
+        }
+
+        para = $.extend(para, this.template_selection);
+      }
+      
+      window.axios({
+        url: '/api/posts/excel',
+        method: 'post',
+        data: para,
+        headers: {'X-CSRF-TOKEN': token.csrf},
+        responseType: 'blob'
+      }).then(({ data }) => {
+        const blob = new Blob([data]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'print.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      });
+    },
+    dumpPdf() {
+      let para = {};
+      let category_values = {
+        categories: this.category_values
+      };
+      let mode_type = {
+        mode: this.target_type
+      };
+
+      if (this.target_type == "multiple") {
+        para = $.extend(para, this.form_electoral);
+        para = $.extend(para, category_values);
+        para = $.extend(para, this.template_selection);
+        para = $.extend(para, mode_type);
+      }else{
+        para = {
+          member_id: this.search.select_member.id
+        }
+
+        para = $.extend(para, this.template_selection);
+      }
+
+      window.axios({
+        url: '/api/posts/pdf',
+        method: 'post',
+        data: para,
+        headers: {'X-CSRF-TOKEN': token.csrf},
+        responseType: 'blob'
+      }).then(({ data }) => {
+        const blob = new Blob([data]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'print.pdf';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
       });
     }
   },

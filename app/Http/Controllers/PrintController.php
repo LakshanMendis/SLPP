@@ -37,7 +37,7 @@ class PrintController extends Controller
         );
     }
 
-    public function print(Request $request)
+    public function pdf(Request $request)
     {
         $province = $request->input('select_province');
         $district = $request->input('select_district');
@@ -483,5 +483,10 @@ class PrintController extends Controller
 
             return response($result_array, Response::HTTP_OK);
         }
+    }
+
+    public function excel(Request $request)
+    {
+        
     }
 }
