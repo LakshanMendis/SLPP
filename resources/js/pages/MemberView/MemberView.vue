@@ -16,19 +16,21 @@
             <b-tab title="Personal" active>
               <b-row>
                 <b-col md="6">
-                  <b-form-group id="input-group-1" label="Membership ID:" label-for="input-1">
+                  <b-form-group id="input-group-1" label="Membership ID:" label-for="membership_id">
                     <b-form-input
-                      id="input-1"
-                      placeholder="Member ID"
+                      id="membership_id"
+                      placeholder="Membership ID"
+                      v-model="form_personal.membership_id"
                     ></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="6">
-                  <b-form-group id="input-group-2" label="Name (Like):" label-for="input-2">
+                  <b-form-group id="input-group-2" label="Name (Like):" label-for="name">
                     <b-form-input
-                      id="input-2"
+                      id="name"
                       placeholder="Member name"
+                       v-model="form_personal.name"
                     ></b-form-input>
                   </b-form-group>
                 </b-col>
@@ -36,27 +38,40 @@
 
               <b-row>
                 <b-col md="6">
-                  <b-form-group id="input-group-7" label="Nationality:" label-for="input-7">
-                    <b-form-select class="mb-3" id="input-7">
-                      <option value="Sinhala">Sinhala</option>
-                      <option value="Hindu">Hindu</option>
-                      <option value="Muslim">Muslim</option>
-                      <option value="Other">Other</option>
+                  <b-form-group id="group_nationality" label="Nationality:" label-for="nationality">
+                    <b-form-select 
+                      class="mb-3" 
+                      id="nationality"
+                      name="nationality"
+                      v-model="form_personal.nationality"
+                    >
+                      <option value="1" selected disabled>Select Nationality</option>
+                      <option
+                        v-for="data in nationalities"
+                        :value="data.id"
+                        :key="data.id"
+                      >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
                     </b-form-select>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="6">
-                  <b-form-group id="input-group-8" label="Religion:" label-for="input-8">
-                    <b-form-select class="mb-3" id="input-8">
-                      <option value="Buddhist">Buddhist</option>
-                      <option value="Christian">Christian</option>
-                      <option value="Hindu">Hindu</option>
-                      <option value="Islamic">Islamic</option>
-                      <option value="Other">Other</option>
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
+                        <b-form-group id="religion" label="Religion:" label-for="religion">
+                          <b-form-select 
+                            class="mb-3" 
+                            id="religion"
+                            name="religion"
+                            v-model="form_personal.religion"
+                          >
+                            <option value="1" selected disabled>Select Religion</option>
+                            <option
+                              v-for="data in religions"
+                              :value="data.id"
+                              :key="data.id"
+                            >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                          </b-form-select>
+                        </b-form-group>
+                      </b-col>
               </b-row>
             </b-tab>
 
@@ -64,66 +79,94 @@
               <b-row>
                 <b-col md="12">
                   <b-row>
-                    <b-col md="4">
-                      <b-form-group id="input-group-14" label="Province:" label-for="input-14">
-                        <b-form-select class="mb-3" id="input-14">
-                          <option value="1">Western</option>
-                          <option value="2">Southern</option>
-                          <option value="3">Central</option>
-                          <option value="4">Nothern</option>
-                          <option value="5">Uva</option>
-                          <option value="6">Sabaragamuwa</option>
-                          <option value="7">North Western</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+                    <b-col md="12">
+                      <b-row>
+                        <b-col md="12">
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group id="group_province" label="Province:" label-for="province">
+                                <b-form-select class="mb-3" id="province" @change="all_districts($event);all_electorates($event);" v-model="form_electoral.province">
+                                  <option value="1" selected disabled>Select Province</option>
+                                  <option
+                                    v-for="data in provinces"
+                                    :value="data.id"
+                                    :key="data.id"
+                                  >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                                </b-form-select>
+                              </b-form-group>
+                            </b-col>
 
-                    <b-col md="4">
-                      <b-form-group id="input-group-15" label="District:" label-for="input-15">
-                        <b-form-select class="mb-3" id="input-14">
-                          <option value="1">Colombo</option>
-                          <option value="2">Gampaha</option>
-                          <option value="3">Matara</option>
-                          <option value="4">Galle</option>
-                          <option value="5">Anuradhapura</option>
-                          <option value="6">Polonnaruwa</option>
-                          <option value="7">Kurunegala</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+                            <b-col md="6">
+                              <b-form-group id="group_district" label="District:" label-for="district">
+                                <b-form-select class="mb-3" id="district" @change="all_local_auths($event);" v-model="form_electoral.district">
+                                  <option value="1" selected disabled>Select District</option>
+                                  <option
+                                    v-for="data in districts"
+                                    :value="data.id"
+                                    :key="data.id"
+                                  >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                                </b-form-select>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
 
-                    <b-col md="4">
-                      <b-form-group id="input-group-16" label="Electorate:" label-for="input-16">
-                        <b-form-select class="mb-3" id="input-16">
-                          <option value="1">Electorate 1</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
+                          <b-row>
+                            <b-col md="6">
+                              <b-form-group id="group_electorate" label="Electorate:" label-for="electorate">
+                                <b-form-select class="mb-3" id="electorate" v-model="form_electoral.electorate">
+                                  <option value="1" selected disabled>Select Electorate</option>
+                                  <option
+                                    v-for="data in electorates"
+                                    :value="data.id"
+                                    :key="data.id"
+                                  >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                                </b-form-select>
+                              </b-form-group>
+                            </b-col>
 
-                  <b-row>
-                    <b-col md="4">
-                      <b-form-group id="input-group-17" label="Local Authority:" label-for="input-17">
-                        <b-form-select class="mb-3" id="input-17">
-                          <option value="1">Local Authority 1</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+                            <b-col md="6">
+                              <b-form-group id="group_local_auth" label="Local Authority:" label-for="local_auth">
+                                <b-form-select class="mb-3" id="local_auth" @change="all_wards($event);" v-model="form_electoral.local_auth">
+                                  <option value="1" selected disabled>Select Local Authority</option>
+                                  <option
+                                    v-for="data in localAuths"
+                                    :value="data.id"
+                                    :key="data.id"
+                                  >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                                </b-form-select>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
 
-                    <b-col md="4">
-                      <b-form-group id="input-group-18" label="Ward:" label-for="input-18">
-                        <b-form-select class="mb-3" id="input-18">
-                          <option value="1">WARD 1</option>
-                        </b-form-select>
-                      </b-form-group>
-                    </b-col>
+                          <b-row>
+                              <b-col md="6">
+                                <b-form-group id="group_ward" label="Ward:" label-for="ward">
+                                  <b-form-select class="mb-3" id="ward" @change="all_gndivs($event);" v-model="form_electoral.ward">
+                                    <option value="1" selected disabled>Select Ward</option>
+                                    <option
+                                      v-for="data in wards"
+                                      :value="data.id"
+                                      :key="data.id"
+                                    >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                                  </b-form-select>
+                                </b-form-group>
+                              </b-col>
 
-                    <b-col md="4">
-                      <b-form-group id="input-group-19" label="GN Division:" label-for="input-19">
-                        <b-form-select class="mb-3" id="input-19">
-                          <option value="1">GN Division 1</option>
-                        </b-form-select>
-                      </b-form-group>
+                              <b-col md="6">
+                                <b-form-group id="group_gn" label="GN Division:" label-for="gn_div">
+                                  <b-form-select class="mb-3" id="gn_div" v-model="form_electoral.gn_div">
+                                    <option value="1" selected disabled>Select GN Division</option>
+                                    <option
+                                      v-for="data in gnDivs"
+                                      :value="data.id"
+                                      :key="data.id"
+                                    >{{ data.name_en + "/" + data.name_si + "/" + data.name_ta }}</option>
+                                  </b-form-select>
+                                </b-form-group>
+                              </b-col>
+                          </b-row>
+                        </b-col>
+                      </b-row>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -132,135 +175,80 @@
 
             <b-tab title="Category">
               <b-row>
-                <b-col md="4">
-                  <b-form-group id="input-group-9" label="Member Type:" label-for="input-9">
-                    <b-form-select class="mb-3" id="input-9">
-                      <option value="1">Parliament</option>
-                      <option value="2">Provincial</option>
-                      <option value="3">Local Authority</option>
-                      <option value="4">SLPP Union</option>
-                      <option value="5">SLPP Party</option>
-                      <option value="6">SLPP Intelectual</option>
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
-
-                <b-col md="4">
-                  <b-form-group id="input-group-10" label="Profession:" label-for="input-10">
-                    <b-form-select class="mb-3" id="input-10">
-                      <option value="1">Administration</option>
-                      <option value="2">Driver</option>
-                      <option value="3">Engineer</option>
-                      <option value="4">Doctor</option>
-                      <option value="5">Tour Guide</option>
-                      <option value="6">Military Officer</option>
-                    </b-form-select>
-                  </b-form-group>
-                </b-col>
-
-                <b-col md="4">
-                  <b-form-group id="input-group-11" label="Sub Category:" label-for="input-11">
-                    <b-form-select class="mb-3" id="input-11">
-                      <option value="1">Sub category 1</option>
-                    </b-form-select>
-                  </b-form-group>
+                <b-col md="12" class="pt-3 pb-2">
+                  <CategoryMultiple 
+                    v-for="(category, index) in categories" 
+                    :key="category.id" 
+                    :id="category.textId" 
+                    :label="category.label" 
+                    :placeholder="category.label" 
+                    :options="category.options"
+                    v-model="category_values[index].value"
+                  >
+                  </CategoryMultiple>
                 </b-col>
               </b-row>
             </b-tab>
           </b-tabs>
 
           <div class="mt-3 clearfix">
-            <div class="float-right">
-              <b-button variant="maroon" size="md"><i class="fa fa-search"></i> Search</b-button>
+            <div class="float-right ml-3">
+              <b-button variant="maroon" size="md" type="button" @click="search"><i class="fa fa-search"></i> Search</b-button>
+            </div>
+            <div class="float-right ml-3">
+              <b-button variant="info" size="md" type="button" @click="pdf"><i class="fa fa-file-pdf-o"></i> PDF</b-button>
             </div>
             <div class="float-left">
-              <b-button variant="primary" size="md"><i class="fa fa-undo"></i> Reset</b-button>
+              <b-button variant="primary" size="md" type="button" @click="resetAll"><i class="fa fa-undo"></i> Reset</b-button>
             </div>
           </div>
         </Widget>
         
         <Widget>
-          <div class="table-resposive widget-table-overflow">
-            <table class="table" id="member-table">
-              <thead>
-                <tr>
-                  <th class="hidden-sm-down">#</th>
-                  <th>Picture</th>
-                  <th>Name</th>
-                  <th class="hidden-sm-down">Categories</th>
-                  <th class="hidden-sm-down">Electoral</th>
-                  <th class="hidden-sm-down">Mobile</th>
-                  <th class="hidden-sm-down">Status</th>
-                  <th class="hidden-sm-down">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="row in tableStyles" :key="row.id">
-                  <td>{{row.id}}</td>
-                  <td>
-                    <img class="img-rounded" :src="row.picture" alt="" height="50" />
-                  </td>
-                  <td>
-                    {{row.name}}
-                    <div v-if="row.label">
-                      <b-badge :variant="row.label.colorClass">{{row.label.text}}</b-badge>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="mb-0">
-                      <small>
-                        <span class="fw-semi-bold">Type:</span>
-                        <span class="text-muted">&nbsp; {{row.cat.type}}</span>
-                      </small>
-                    </p>
-                    <p>
-                      <small>
-                        <span class="fw-semi-bold">Profession:</span>
-                        <span class="text-muted">&nbsp; {{row.cat.profession}}</span>
-                      </small>
-                    </p>
-                  </td>
-                  <td>
-                    <p class="mb-0">
-                      <small>
-                        <span class="fw-semi-bold">Province:</span>
-                        <span class="text-muted">&nbsp; {{row.elec.province}}</span>
-                      </small>
-                    </p>
-                    <p class="mb-0">
-                      <small>
-                        <span class="fw-semi-bold">District:</span>
-                        <span class="text-muted">&nbsp; {{row.elec.district}}</span>
-                      </small>
-                    </p>
-                    <p>
-                      <small>
-                        <span class="fw-semi-bold">Electorate:</span>
-                        <span class="text-muted">&nbsp; {{row.elec.electorate}}</span>
-                      </small>
-                    </p>
-                  </td>
-                  <td class="text-semi-bold">
-                    {{row.mobile}}
-                  </td>
-                  <td class="text-semi-bold">
-                    {{row.status}}
-                  </td>
-                  <td class="width-150" align="center">
-                    <b-button size="sm" variant="maroon" v-b-modal.modal-1><i class="fa fa-search"></i></b-button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="table-responsive widget-table-overflow">
+            <b-table
+              id="member-table"
+              :items="tableProvider"
+              :per-page="table.perPage"
+              :api-url="table.url"
+              :current-page="table.currentPage"
+              :busy.sync="table.isBusy"
+              :striped="true"
+              :hover="true"
+              primary-key="id"
+              selectable
+              select-mode="single"
+              selectedVariant="maroon"
+            >
+              <template slot="image" slot-scope="row">
+                <div class="text-center">
+                  <img v-if="row.value" :src="row.value" width="50" height="50">
+                  <img v-if="!row.value" src="../../assets/avatar.png" width="50" height="50">
+                </div>
+              </template>
+            </b-table>
           </div>
-          <div class="clearfix">
-            <div class="float-right">
-              <b-pagination
-                :total-rows="5"
-                :per-page="1"
-                aria-controls="member-table"
-              ></b-pagination>
+          <div class="mt-2 clearfix">
+            <div md="2" class="float-left">
+              <b-form-select id="table-per-page-select" v-model="table.perPage">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </b-form-select>
             </div>
+
+            <b-pagination
+              v-model="table.currentPage"
+              :total-rows="table.totalRows"
+              :per-page="table.perPage"
+              align="right"
+              aria-controls="member-table"
+            >
+            </b-pagination>
           </div>
         </Widget>
       </b-col>
@@ -564,115 +552,213 @@
 
 <script>
 import Widget from 'RESO/js/components/Widget/Widget';
+import CategoryMultiple from 'RESO/js/components/CategoryMultiple/CategoryMultiple';
 
 export default {
-  name: 'AnotherPage',
-  components: { Widget },
+  name: 'MemberView',
+  components: { Widget, CategoryMultiple },
   data() {
     return {
-      tableStyles: [
-        {
-          id: 1,
-          picture: require('../../assets/people/a1.jpg'), // eslint-disable-line global-require
-          name: 'Soe Jane',
-          label: {
-            colorClass: 'secondary',
-            text: 'Tag1, Tag2',
-          },
-          cat: {
-            type: 'Parliament',
-            profession: 'Doctor',
-          },
-          elec: {
-            province: 'Western',
-            district: 'Gampaha',
-            electorate: 'Kelaniya',
-          },
-          status: 'Active',
-          mobile: '0776447552',
-        },
-        {
-          id: 2,
-          picture: require('../../assets/people/a2.jpg'), // eslint-disable-line global-require
-          name: 'Jenny Jones',
-          label: {
-            colorClass: 'secondary',
-            text: '',
-          },
-          cat: {
-            type: 'Provincial',
-            profession: 'Lawyer',
-          },
-          elec: {
-            province: 'Western',
-            district: 'Colombo',
-            electorate: 'Maradana',
-          },
-          status: 'Active',
-          mobile: '0712346540',
-        },
-        {
-          id: 3,
-          picture: require('../../assets/people/a3.jpg'), // eslint-disable-line global-require
-          name: 'Sierra Banks',
-          label: {
-            colorClass: 'secondary',
-            text: 'Tag1, Tag2, Tag3, Tag4',
-          },
-          cat: {
-            type: 'Local Authority',
-            profession: 'Lawyer',
-          },
-          elec: {
-            province: 'Southern',
-            district: 'Matara',
-            electorate: 'Beliatta',
-          },
-          status: 'Active',
-          mobile: '0774662890',
-        },
-        {
-          id: 4,
-          picture: require('../../assets/people/a4.jpg'), // eslint-disable-line global-require
-          name: 'Daniel Rutherford',
-          label: {
-            colorClass: 'secondary',
-            text: 'Tag1',
-          },
-          cat: {
-            type: 'SLPP Union',
-            profession: 'Enterprenuer',
-          },
-          elec: {
-            province: 'North Western',
-            district: 'Dambulla',
-            electorate: 'Galgamuwa',
-          },
-          status: 'Active',
-          mobile: '0753427494',
-        },
-        {
-          id: 5,
-          picture: require('../../assets/people/a5.jpg'), // eslint-disable-line global-require
-          name: 'Joe John',
-          label: {
-            colorClass: 'secondary',
-            text: 'Tag2, Tag3',
-          },
-          cat: {
-            type: 'Party Member',
-            profession: 'Engineer',
-          },
-          elec: {
-            province: 'Western',
-            district: 'Gampaha',
-            electorate: 'Delgoda',
-          },
-          status: 'Active',
-          mobile: '0776336558',
-        },
-      ],
+      nationalities: [],
+      religions: [],
+      provinces: [],
+      districts: [],
+      electorates: [],
+      localAuths: [],
+      wards: [],
+      gnDivs: [],
+      category_loaded: false,
+      categories: [],
+      category_values: [],
+      category_init_values: [],
+      form_personal:{
+        membership_id: "",
+        name: "",
+        nationality: 1,
+        religion: 1,
+      },
+      form_electoral: {
+        province: 1,
+        district: 1,
+        electorate: 1,
+        local_auth: 1,
+        ward: 1,
+        gn_div: 1,
+      },
+      table: {
+        currentPage: 1,
+        totalRows: 0,
+        perPage: 5,
+        url: '/api/members/table',
+        isBusy: false,
+      }
     };
   },
+  methods: {
+    all_nationalities() {
+      window.axios.get('/api/nationalities').then(({ data }) => {
+        this.nationalities = data;
+      });
+    },
+    all_religions() {
+      window.axios.get('/api/religions').then(({ data }) => {
+        this.religions = data;
+      });
+    },
+    all_provinces(){
+      window.axios.get('/api/provinces').then(({data}) => {
+        this.provinces = data;
+      })
+    },
+    all_districts(province = 1){
+      if (province == 1) return;
+      
+      const para = {'province_id': province};
+
+      window.axios.get('/api/districts', { params: para }).then(({data})=>{
+        this.districts = data;
+      })
+    },
+    all_electorates(province_id = 1) {
+      if (province_id == 1) return;
+
+      const para = { 'province_id': province_id };
+
+      window.axios.get('/api/electorates', { params: para }).then(({ data }) => {
+        this.electorates = data;
+      });
+    },
+    all_local_auths(district_id = 1) {
+      if (district_id == 1) return;
+
+      const para = { 'district_id': district_id };
+
+      window.axios.get('/api/localAuths', { params: para }).then(({ data }) => {
+        this.localAuths = data;
+      });
+    },
+    all_wards(local_auth_id = 1) {
+      if (local_auth_id == 1) return;
+
+      const para = { 'local_auth_id': local_auth_id };
+
+      window.axios.get('/api/wards', { params: para }).then(({ data }) => {
+        this.wards = data;
+      });
+    },
+    all_gndivs(ward_id = 1) {
+      if (ward_id == 1) return;
+
+      const para = { 'ward_id': ward_id };
+
+      window.axios.get('/api/gnDivs', { params: para }).then(({ data }) => {
+        this.gnDivs = data;
+      });
+    },
+    get_categories() {
+      window.axios.get('/api/categories').then(({ data }) => {
+        this.categories = data;
+
+        this.category_loaded = true;
+      });
+    },
+    get_category_values() {
+      const para = { 'member_id': 0 };
+
+      window.axios.get('/api/categories/values', { params: para }).then(({ data }) => {
+        this.category_values = data;
+
+        if (!this.category_loaded) {
+          this.category_init_values = data;
+          this.get_categories();
+        }
+      });
+    },
+    resetAll(){
+      this.form_personal.membership_id = '';
+      this.form_personal.name = '';
+      this.form_personal.nationality = 1;
+      this.form_personal.religion = 1;
+
+      this.districts = [],
+      this.electorates = [],
+      this.localAuths = [],
+      this.wards = [],
+      this.gnDivs = [],
+
+      this.form_electoral.province = 1;
+      this.form_electoral.district = 1;
+      this.form_electoral.electorate = 1;
+      this.form_electoral.local_auth = 1;
+      this.form_electoral.ward = 1;
+      this.form_electoral.gn_div = 1;
+
+      window.axios.get('/api/categories/values').then(({ data }) => {
+        this.category_values = data;
+        this.$root.$emit('bv::refresh::table', 'member-table');
+      });
+    },
+    search(){
+      this.$root.$emit('bv::refresh::table', 'member-table');
+    },
+    pdf(){
+      let filter_params = "";
+      const form_category = { 'categories': this.category_values };
+
+      filter_params = $.extend(filter_params, this.form_personal);
+      filter_params = $.extend(filter_params, this.form_electoral);
+      filter_params = $.extend(filter_params, form_category);
+
+      window.axios({
+        url: '/api/members/print',
+        method: 'post',
+        data: filter_params,
+        headers: {'X-CSRF-TOKEN': token.csrf},
+        responseType: 'blob'
+      }).then(({ data }) => {
+        const blob = new Blob([data]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'members.pdf';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      });
+    },
+    tableProvider(ctx, callback) {
+      let filter_params = "";
+      const form_category = { 'categories': this.category_values };
+
+      this.table.isBusy = true;
+
+      filter_params = $.extend(filter_params, this.form_personal);
+      filter_params = $.extend(filter_params, this.form_electoral);
+      filter_params = $.extend(filter_params, form_category);
+      filter_params = $.extend(filter_params, ctx);
+
+      window.axios.post(ctx.apiUrl, filter_params)
+      .then(({data}) => {
+        this.table.isBusy = false;
+        this.table.totalRows = data.totalRows;
+        callback(data.data);
+      })
+      .catch((e) => {
+        console.error(e);
+        this.table.isBusy = false;
+        this.table.totalRows = 0;
+        callback([]);
+      });
+
+      return null;
+    }
+  },
+  created(){
+    this.all_provinces();
+    this.all_religions();
+    this.all_nationalities();
+    this.get_category_values();
+  }
 };
 </script>

@@ -6,6 +6,7 @@ use App\member;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use PDF;
 
 class MemberController extends Controller
 {
@@ -48,6 +49,465 @@ class MemberController extends Controller
         }
 
         return response($matching_members, Response::HTTP_OK);
+    }
+
+    public function print(Request $request){
+        $membership_id = (isset($request->membership_id)) ? $request->input('membership_id') : "";
+        $name_like = (isset($request->name)) ? $request->input('name') : "";
+        $nationality = $request->input('nationality');
+        $religion = $request->input('religion');
+        $province = $request->input('province');
+        $district = $request->input('district');
+        $electorate = $request->input('electorate');
+        $local_auth = $request->input('local_auth');
+        $ward = $request->input('ward');
+        $gn_div = $request->input('gn_div');
+        $categories = $request->input('categories');
+
+        $where = "";
+        $result_array = array();
+        $data = array();
+        $debug = "";
+        $message = "";
+        $result = false;
+        $page = "";
+
+        if (isset($categories)){
+            foreach ($categories as $category) {
+                $category_id = $category['id'];
+                $category_values = $category['value'];
+    
+                if ($category_values == NULL) {
+                    continue;
+                }
+
+                $append_where = "";
+                
+                foreach ($category_values as $category_value){
+                    $append_where .= (empty($append_where)) ? "" : " AND ";
+                    $append_where .= " MAP.category_id = ".$category_id." AND MAP.option_id = ".$category_value['id']." ";
+                }
+
+                if (!empty($append_where)){
+                    $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+                    $where .= $append_where;
+                    $where .= " ) ";
+                }
+            }
+        }
+
+        $append_where = "";
+
+        // Generate where clause by checking electoral filters
+        if ($province > 1 || $district > 1 || $electorate > 1 || $local_auth > 1 || $ward > 1 || $gn_div > 1) {
+            if ($province > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.province_id = $province ";
+            }
+
+            if ($district > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.district_id = $district ";
+            }
+
+            if ($electorate > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.electorate_id = $electorate ";
+            }
+
+            if ($local_auth > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.local_auth_id = $local_auth ";
+            }
+
+            if ($ward > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.ward_id = $ward ";
+            }
+
+            if ($gn_div > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.gn_id = $gn_div ";
+            }
+        }
+
+        if (!empty($append_where)){
+            $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+            $where .= $append_where;
+            $where .= " ) ";
+        }
+
+        // Generate where clause for name like
+        if (!empty($name_like)){
+            $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+            $where .= " MEM.firstname LIKE '%$name_like%' OR ";
+            $where .= " MEM.lastname LIKE '%$name_like%' OR ";
+            $where .= " MEM.pref_lang_name LIKE '%$name_like%'";
+            $where .= " ) ";
+        }
+
+        // Generate where clause for membership id
+        if (!empty($membership_id)){
+            $where .= (empty($where)) ? " WHERE " : " AND ";
+            $where .= " MEM.membership_id LIKE '%$membership_id%' ";
+        }
+
+        // Generate where clause for nationality
+        if ($nationality > 1) {
+            $where .= (empty($where)) ? " WHERE " : " AND ";
+            $where .= " MEM.nationality_id = $nationality ";
+        }
+
+        // Generate where clause for religion
+        if ($religion > 1) {
+            $where .= (empty($where)) ? " WHERE " : " AND ";
+            $where .= " MEM.religion_id = $religion ";
+        }
+
+        $member_query = "SELECT
+        MEM.id AS MEM_ID,
+        MEM.membership_id AS MEM_MEMSHIP_ID,
+        MEM.firstname AS MEM_FIRSTNAME,
+        MEM.lastname AS MEM_LASTNAME,
+        TTL.name_en AS TTL_EN,
+        TTL.name_si AS TTL_SI,
+        TTL.name_ta AS TTL_TA,
+        MEM.image_path AS MEM_IMG_URL,
+        MEM.nic AS MEM_NIC,
+        PRV.name_en AS PRV_EN,
+        PRV.name_si AS PRV_SI,
+        PRV.name_ta AS PRV_TA,
+        DIS.name_en AS DIS_EN,
+        DIS.name_si AS DIS_SI,
+        DIS.name_ta AS DIS_TA,
+        ELE.name_en AS ELE_EN,
+        ELE.name_si AS ELE_SI,
+        ELE.name_ta AS ELE_TA,
+        MEM.living_abroad AS MEM_IS_LIVE_ABROAD,
+        MEM.mobile1 AS MEM_MOBILE,
+        MEM.email AS MEM_EMAIL,
+        MEM.pref_lang_id AS MEM_PREF_LANG_ID,
+        LAN.`code` AS LAN_CODE,
+        LAN.`caption` AS LAN_CAPTION,
+        MEM.pref_lang_name AS MEM_PREF_NAME,
+        MEM.pref_lang_address_line1 AS MEM_PREF_ADDR_L1,
+        MEM.pref_lang_address_line2 AS MEM_PREF_ADDR_L2,
+        MEM.pref_lang_city AS MEM_PREF_CITY,
+        MEM.`status` AS MEM_STATUS
+        FROM
+        slpp_members AS MEM
+        LEFT JOIN master_titles AS TTL ON MEM.title_id = TTL.id
+        LEFT JOIN master_provinces AS PRV ON MEM.province_id = PRV.id
+        LEFT JOIN master_districts AS DIS ON MEM.district_id = DIS.id
+        LEFT JOIN master_electorates AS ELE ON MEM.electorate_id = ELE.id
+        LEFT JOIN master_languages AS LAN ON MEM.pref_lang_id = LAN.id
+        LEFT JOIN slpp_member_category_maps AS MAP ON MEM.id = MAP.member_id ".
+        $where
+        ." GROUP BY MEM.id
+        ORDER BY
+        MEM_ID DESC";
+
+        $member_res = DB::select($member_query);
+
+        $page .= "<table border=\"1\" cellspacing=\"1\" cellpadding=\"1\" style=\"border-collapse: collapse;\">";
+        $page .= "<thead>";
+        $page .= "<tr>";
+        $page .= "<th>Membership ID</th>";
+        $page .= "<th>Name</th>";
+        $page .= "<th>Province</th>";
+        $page .= "<th>District</th>";
+        $page .= "<th>Electoral District</th>";
+        $page .= "<th>Living Overseas</th>";
+        $page .= "<th>Address</th>";
+        $page .= "<th>Mobile</th>";
+        $page .= "<th>Email</th>";
+        $page .= "<th>Preferred Language</th>";
+        $page .= "<th>Status</th>";
+        $page .= "</tr>";
+        $page .= "</thead>";
+        $page .= "<tbody>";
+
+        foreach ($member_res as $key=>$member) {
+            $uc_lang_code = strtoupper($member->LAN_CODE);
+            $formatted_name = "";
+
+            $page .= "<tr>";
+
+            $page .= "<td>".$member->MEM_MEMSHIP_ID."</td>";
+
+            if ($uc_lang_code == "EN") {
+                $formatted_name = $member->TTL_EN.". ".$member->MEM_PREF_NAME;
+            } else if ($uc_lang_code == "SI") {
+                $formatted_name = $member->MEM_PREF_NAME." ".$member->TTL_SI;
+            } else if ($uc_lang_code == "TA") {
+                $formatted_name = $member->MEM_PREF_NAME." ".$member->TTL_TA;
+            }
+
+            $page .= "<td>".$formatted_name."</td>";
+            
+            $page .= "<td>".$member->PRV_EN."</td>";
+            $page .= "<td>".$member->DIS_EN."</td>";
+            $page .= "<td>".$member->ELE_EN."</td>";
+
+            $overseas = ($member->MEM_IS_LIVE_ABROAD === 1) ? "Yes" : "No";
+
+            $page .= "<td>".$overseas."</td>";
+            $page .= "<td>".$member->MEM_PREF_ADDR_L1.", ".$member->MEM_PREF_ADDR_L2.", ".$member->MEM_PREF_CITY."</td>";
+            $page .= "<td>".$member->MEM_MOBILE."</td>";
+            $page .= "<td>".$member->MEM_EMAIL."</td>";
+
+            $page .= "<td>".$member->LAN_CAPTION."</td>";
+
+            $status = ($member->MEM_STATUS === 1) ? "Active" : "Inactive";
+
+            $page .= "<td>".$status."</td>";
+
+            $page .= "</tr>";
+        }
+
+        $page .= "</tbody>";
+        $page .= "</table>";
+
+        if (!empty($page)) {
+            $output = "<!doctype html>
+                            <html>
+                            <head>
+                            <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+                            </head>
+                            <body>
+                            <h3>Member Report</h3><br />".$page."</body>
+                            </html>";
+
+            PDF::setAutoPageBreak(true, 10);
+            PDF::setFontSubsetting(false);
+            PDF::SetFont('freeserif', '', 10);
+            PDF::AddPage('L');
+            //PDF::writeHTML($output, true, 0, true, true);
+            PDF::writeHTML($output, true, false, true, false, '');
+
+            PDF::Output('members.pdf');
+        } else {
+            $result_array['data'] = $data;
+            $result_array['result'] = $result;
+            $result_array['debug'] = $debug;
+            $result_array['message'] = $message;
+
+            return response($result_array, Response::HTTP_OK);
+        }
+    }
+
+    public function table(Request $request) {
+        $filter = $request->input('filter');
+        $sortBy = $request->input('sortBy');
+        $sortdesc = $request->input('sortdesc');
+        $perPage = $request->input('perPage');
+        $currentPage = $request->input('currentPage');
+
+        $membership_id = (isset($request->membership_id)) ? $request->input('membership_id') : "";
+        $name_like = (isset($request->name)) ? $request->input('name') : "";
+        $nationality = $request->input('nationality');
+        $religion = $request->input('religion');
+        $province = $request->input('province');
+        $district = $request->input('district');
+        $electorate = $request->input('electorate');
+        $local_auth = $request->input('local_auth');
+        $ward = $request->input('ward');
+        $gn_div = $request->input('gn_div');
+        $categories = $request->input('categories');
+
+        $start = ($currentPage - 1) * $perPage;
+        $limit = $perPage;
+
+        $result_array = array();
+        $totalRows = 0;
+        $data = array();
+        $debug = "";
+
+        $where = "";
+
+        if (isset($categories)){
+            foreach ($categories as $category) {
+                $category_id = $category['id'];
+                $category_values = $category['value'];
+    
+                if ($category_values == NULL) {
+                    continue;
+                }
+
+                $append_where = "";
+                
+                foreach ($category_values as $category_value){
+                    $append_where .= (empty($append_where)) ? "" : " AND ";
+                    $append_where .= " MAP.category_id = ".$category_id." AND MAP.option_id = ".$category_value['id']." ";
+                }
+
+                if (!empty($append_where)){
+                    $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+                    $where .= $append_where;
+                    $where .= " ) ";
+                }
+            }
+        }
+
+        $append_where = "";
+
+        // Generate where clause by checking electoral filters
+        if ($province > 1 || $district > 1 || $electorate > 1 || $local_auth > 1 || $ward > 1 || $gn_div > 1) {
+            if ($province > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.province_id = $province ";
+            }
+
+            if ($district > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.district_id = $district ";
+            }
+
+            if ($electorate > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.electorate_id = $electorate ";
+            }
+
+            if ($local_auth > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.local_auth_id = $local_auth ";
+            }
+
+            if ($ward > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.ward_id = $ward ";
+            }
+
+            if ($gn_div > 1) {
+                $append_where .= (empty($append_where)) ? "" : " AND ";
+                $append_where .= " MEM.gn_id = $gn_div ";
+            }
+        }
+
+        if (!empty($append_where)){
+            $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+            $where .= $append_where;
+            $where .= " ) ";
+        }
+
+        // Generate where clause for name like
+        if (!empty($name_like)){
+            $where .= (empty($where)) ? " WHERE ( " : " AND ( ";
+            $where .= " MEM.firstname LIKE '%$name_like%' OR ";
+            $where .= " MEM.lastname LIKE '%$name_like%' OR ";
+            $where .= " MEM.pref_lang_name LIKE '%$name_like%'";
+            $where .= " ) ";
+        }
+
+        // Generate where clause for membership id
+        if (!empty($membership_id)){
+            $where .= (empty($where)) ? " WHERE " : " AND ";
+            $where .= " MEM.membership_id LIKE '%$membership_id%' ";
+        }
+
+        // Generate where clause for nationality
+        if ($nationality > 1) {
+            $where .= (empty($where)) ? " WHERE " : " AND ";
+            $where .= " MEM.nationality_id = $nationality ";
+        }
+
+        // Generate where clause for religion
+        if ($religion > 1) {
+            $where .= (empty($where)) ? " WHERE " : " AND ";
+            $where .= " MEM.religion_id = $religion ";
+        }
+
+        $count_query = "SELECT
+        COUNT(DISTINCT MEM.id) AS c
+        FROM
+        slpp_members AS MEM
+        LEFT JOIN master_titles AS TTL ON MEM.title_id = TTL.id
+        LEFT JOIN master_provinces AS PRV ON MEM.province_id = PRV.id
+        LEFT JOIN master_districts AS DIS ON MEM.district_id = DIS.id
+        LEFT JOIN master_electorates AS ELE ON MEM.electorate_id = ELE.id
+        LEFT JOIN master_languages AS LAN ON MEM.pref_lang_id = LAN.id
+        LEFT JOIN slpp_member_category_maps AS MAP ON MEM.id = MAP.member_id ".$where;
+
+        $count_res = DB::select($count_query);
+
+        $totalRows = $count_res[0]->c;
+
+        $member_query = "SELECT
+        MEM.id AS MEM_ID,
+        MEM.membership_id AS MEM_MEMSHIP_ID,
+        MEM.firstname AS MEM_FIRSTNAME,
+        MEM.lastname AS MEM_LASTNAME,
+        TTL.name_en AS TTL_EN,
+        TTL.name_si AS TTL_SI,
+        TTL.name_ta AS TTL_TA,
+        MEM.image_path AS MEM_IMG_URL,
+        MEM.nic AS MEM_NIC,
+        PRV.name_en AS PRV_EN,
+        PRV.name_si AS PRV_SI,
+        PRV.name_ta AS PRV_TA,
+        DIS.name_en AS DIS_EN,
+        DIS.name_si AS DIS_SI,
+        DIS.name_ta AS DIS_TA,
+        ELE.name_en AS ELE_EN,
+        ELE.name_si AS ELE_SI,
+        ELE.name_ta AS ELE_TA,
+        MEM.living_abroad AS MEM_IS_LIVE_ABROAD,
+        MEM.mobile1 AS MEM_MOBILE,
+        MEM.email AS MEM_EMAIL,
+        MEM.pref_lang_id AS MEM_PREF_LANG_ID,
+        LAN.`code` AS LAN_CODE,
+        MEM.pref_lang_name AS MEM_PREF_NAME,
+        MEM.pref_lang_address_line1 AS MEM_PREF_ADDR_L1,
+        MEM.pref_lang_address_line2 AS MEM_PREF_ADDR_L2,
+        MEM.pref_lang_city AS MEM_PREF_CITY,
+        MEM.`status` AS MEM_STATUS
+        FROM
+        slpp_members AS MEM
+        LEFT JOIN master_titles AS TTL ON MEM.title_id = TTL.id
+        LEFT JOIN master_provinces AS PRV ON MEM.province_id = PRV.id
+        LEFT JOIN master_districts AS DIS ON MEM.district_id = DIS.id
+        LEFT JOIN master_electorates AS ELE ON MEM.electorate_id = ELE.id
+        LEFT JOIN master_languages AS LAN ON MEM.pref_lang_id = LAN.id
+        LEFT JOIN slpp_member_category_maps AS MAP ON MEM.id = MAP.member_id ".
+        $where
+        ." GROUP BY MEM.id
+        ORDER BY
+        MEM_ID DESC
+        LIMIT $start, $limit";
+
+        $member_res = DB::select($member_query);
+
+        foreach ($member_res as $key=>$member) {
+            $uc_lang_code = strtoupper($member->LAN_CODE);
+
+            $data[$key]['id'] = $member->MEM_ID;
+            $data[$key]['image'] = $member->MEM_IMG_URL;
+            $data[$key]['membership_id'] = $member->MEM_MEMSHIP_ID;
+
+            if ($uc_lang_code == "EN") {
+                $data[$key]['name'] = $member->TTL_EN.". ".$member->MEM_PREF_NAME;
+            } else if ($uc_lang_code == "SI") {
+                $data[$key]['name'] = $member->MEM_PREF_NAME." ".$member->TTL_SI;
+            } else if ($uc_lang_code == "TA") {
+                $data[$key]['name'] = $member->MEM_PREF_NAME." ".$member->TTL_TA;
+            }
+            
+            $data[$key]['province'] = $member->PRV_EN;
+            $data[$key]['district'] = $member->DIS_EN;
+            $data[$key]['electorate'] = $member->ELE_EN;
+            $data[$key]['overseas'] = ($member->MEM_IS_LIVE_ABROAD === 1) ? "Yes" : "No";
+            $data[$key]['mobile'] = $member->MEM_MOBILE;
+            $data[$key]['email'] = $member->MEM_EMAIL;
+            $data[$key]['status'] = ($member->MEM_STATUS === 1) ? "Active" : "Inactive";
+        }
+
+        $result_array['data'] = $data;
+        $result_array['totalRows'] = $totalRows;
+        $result_array['currentPage'] = $currentPage;
+        $result_array['perPage'] = $perPage;
+        $result_array['debug'] = $debug;
+
+        return response($result_array, Response::HTTP_OK);
     }
 
     public function count (Request $request) {

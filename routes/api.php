@@ -64,11 +64,11 @@ Route::resource('/languages', 'LanguageController', [
 Route::get('/members/search', 'MemberController@search');
 Route::get('/members/count', 'MemberController@count');
 Route::post('/members/image/upload', 'MemberController@imageUpload');
-
+Route::post('/members/print', 'MemberController@print');
+Route::post('/members/table', 'MemberController@table');
 Route::resource('/members', 'MemberController');
 
 Route::get('/categories/values', 'CategoryController@values');
-
 Route::resource('/categories', 'CategoryController', [
     'except' => ['edit', 'store']
 ]);
@@ -108,6 +108,7 @@ Route::resource('/authenticate', 'AuthenticationController');
 
 Route::get('/users/search', 'UserController@search');
 Route::resource('/users', 'UserController');
+
 Route::resource('/access', 'AccessController');
 
 Route::post('/permission/save', 'PermissionController@save');
